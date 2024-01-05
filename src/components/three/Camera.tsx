@@ -18,18 +18,20 @@ export function Camera() {
 
   if (activeView === 'topView') {
     new TWEEN.Tween(camera.position)
-      .to(cameraPositions.topView, 600)
-      .start()
+      .to(cameraPositions.topView, 1200)
+      .easing(TWEEN.Easing.Cubic.Out)
       .onStart(() => setDisableOrbitControls(true))
       .onUpdate(() => camera.lookAt(0, 0, 0))
-      .onComplete(() => setDisableOrbitControls(false));
+      .onComplete(() => setDisableOrbitControls(false))
+      .start();
   } else {
     new TWEEN.Tween(camera.position)
-      .to(cameraPositions.initial, 600)
-      .start()
+      .to(cameraPositions.initial, 1200)
+      .easing(TWEEN.Easing.Cubic.Out)
       .onStart(() => setDisableOrbitControls(true))
       .onUpdate(() => camera.lookAt(0, 0, 0))
-      .onComplete(() => setDisableOrbitControls(false));
+      .onComplete(() => setDisableOrbitControls(false))
+      .start();
   }
   
   return null;

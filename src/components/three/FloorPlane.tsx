@@ -29,7 +29,7 @@ export function FloorPlane() {
 export function FloorPlaneBaseGrid() {
   return (
     <gridHelper
-      args={[40, 80, 0xe3e3e3, 0xe3e3e3]}
+      args={[80, 80 * 2, 0xe3e3e3, 0xe3e3e3]}
       position={FLOOR_PLANE_POSITION}
     />
   );
