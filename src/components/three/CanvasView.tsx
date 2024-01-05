@@ -4,6 +4,7 @@ import { css } from '@emotion/css';
 
 import { Lightings } from '#/components/three/Lightings';
 import { FloorPlane, FloorPlaneBaseGrid } from '#/components/three/FloorPlane';
+import { Camera } from './Camera';
 import { useViewStore } from '#/store/view';
 
 const styles = {
@@ -17,23 +18,16 @@ const styles = {
 };
 
 function Scene() {
-  const activeView = useViewStore(state => state.activeView);
-  const { camera } = useThree();
-
-  if (activeView === 'topView') {
-    camera.position.set(0, 20, 20);
-    camera.rotation.set(-Math.PI / 2, 0, 0);
-  } else {
-    camera.position.set(0, 0, 0);
-    camera.rotation.set(0, 0, 0);
-  }
-
+  const isOrbitControlsDisabled = useViewStore(state => state.isOrbitControlsDisabled);
   return (
     <>
       <Lightings />
       <FloorPlane />
       <FloorPlaneBaseGrid />
-      <OrbitControls />
+      <OrbitControls
+        enabled={!isOrbitControlsDisabled}
+      />
+      <Camera />
       <Stats />
     </>
   );

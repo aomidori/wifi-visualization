@@ -1,7 +1,7 @@
 import { useGLTF } from '@react-three/drei';
 import { Vector3 } from '@react-three/fiber';
 
-const FLOOR_PLANE_POSITION: Vector3 = [0, -5, -20];
+const FLOOR_PLANE_POSITION: Vector3 = [0, 0, 0];
 
 const hideCeiling = (scene: THREE.Group<THREE.Object3DEventMap>) => {
   scene?.traverse((child) => {
@@ -13,7 +13,6 @@ const hideCeiling = (scene: THREE.Group<THREE.Object3DEventMap>) => {
 
 export function FloorPlane() {
   const gltf = useGLTF('/assets/models/floor_plan/scan.gltf', true);
-  console.log('gltf', gltf);
 
   const scene = gltf.scene || gltf.scenes[0];
   hideCeiling(scene);
