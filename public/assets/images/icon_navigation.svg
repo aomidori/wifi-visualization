@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="152" height="86" viewBox="0 0 152 86">
+  <g id="navigationIcon" transform="translate(-201 -727)">
+    <g id="Rectangle_1" data-name="Rectangle 1" transform="translate(253 727)" fill="none" stroke="#000" stroke-width="1">
+      <rect width="48" height="41" rx="10" stroke="none"/>
+      <rect x="0.5" y="0.5" width="47" height="40" rx="9.5" fill="none"/>
+    </g>
+    <g id="Rectangle_1-2" data-name="Rectangle 1" transform="translate(201 772)" fill="none" stroke="#000" stroke-width="1">
+      <rect width="48" height="41" rx="10" stroke="none"/>
+      <rect x="0.5" y="0.5" width="47" height="40" rx="9.5" fill="none"/>
+    </g>
+    <g id="Rectangle_1-3" data-name="Rectangle 1" transform="translate(253 772)" fill="none" stroke="#000" stroke-width="1">
+      <rect width="48" height="41" rx="10" stroke="none"/>
+      <rect x="0.5" y="0.5" width="47" height="40" rx="9.5" fill="none"/>
+    </g>
+    <g id="Rectangle_1-4" data-name="Rectangle 1" transform="translate(305 772)" fill="none" stroke="#000" stroke-width="1">
+      <rect width="48" height="41" rx="10" stroke="none"/>
+      <rect x="0.5" y="0.5" width="47" height="40" rx="9.5" fill="none"/>
+    </g>
+    <g id="Polygon_2" data-name="Polygon 2" transform="translate(272 743)" stroke-linecap="round" stroke-linejoin="bevel">
+      <path d="M 10.19098472595215 10.5 L 0.8090149760246277 10.5 L 5.5 1.118029952049255 L 10.19098472595215 10.5 Z" stroke="none"/>
+      <path d="M 5.5 2.236069679260254 L 1.618035316467285 10 L 9.381964683532715 10 L 5.5 2.236069679260254 M 5.5 0 L 11 11 L 0 11 L 5.5 0 Z" stroke="none" fill="#000"/>
+    </g>
+    <g id="Polygon_3" data-name="Polygon 3" transform="translate(217.5 797.713) rotate(-90)" stroke-linecap="round" stroke-linejoin="bevel">
+      <path d="M 9.648516654968262 10.96751594543457 L 0.7765024900436401 10.96751594543457 L 5.212505340576172 1.208292365074158 L 9.648516654968262 10.96751594543457 Z" stroke="none"/>
+      <path d="M 5.212503910064697 2.416610717773438 L 1.553001403808594 10.46751594543457 L 8.871999740600586 10.46751594543457 L 5.212503910064697 2.416610717773438 M 5.212504863739014 -4.76837158203125e-06 L 10.42500495910645 11.46751594543457 L -4.76837158203125e-06 11.46751594543457 L 5.212504863739014 -4.76837158203125e-06 Z" stroke="none" fill="#000"/>
+    </g>
+    <g id="Polygon_4" data-name="Polygon 4" transform="translate(335.734 787.287) rotate(90)" stroke-linecap="round" stroke-linejoin="bevel">
+      <path d="M 9.648516654968262 10.96751594543457 L 0.7765024900436401 10.96751594543457 L 5.212505340576172 1.208292365074158 L 9.648516654968262 10.96751594543457 Z" stroke="none"/>
+      <path d="M 5.212503910064697 2.416610717773438 L 1.553001403808594 10.46751594543457 L 8.871999740600586 10.46751594543457 L 5.212503910064697 2.416610717773438 M 5.212504863739014 -4.76837158203125e-06 L 10.42500495910645 11.46751594543457 L -4.76837158203125e-06 11.46751594543457 L 5.212504863739014 -4.76837158203125e-06 Z" stroke="none" fill="#000"/>
+    </g>
+    <g id="Polygon_5" data-name="Polygon 5" transform="translate(283 800) rotate(180)" stroke-linecap="round" stroke-linejoin="bevel">
+      <path d="M 10.19098472595215 10.5 L 0.8090149760246277 10.5 L 5.5 1.118029952049255 L 10.19098472595215 10.5 Z" stroke="none"/>
+      <path d="M 5.5 2.236069679260254 L 1.618035316467285 10 L 9.381964683532715 10 L 5.5 2.236069679260254 M 5.5 0 L 11 11 L 0 11 L 5.5 0 Z" stroke="none" fill="#000"/>
+    </g>
+  </g>
+</svg>
