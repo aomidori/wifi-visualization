@@ -11,14 +11,20 @@
   },
   "dependencies": {
     "@emotion/css": "^11.11.2",
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
     "@react-three/drei": "^9.93.0",
     "@react-three/fiber": "^8.15.13",
+    "@tweenjs/tween.js": "^21.0.0",
     "@types/three": "^0.160.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "three": "^0.160.0"
+    "three": "^0.160.0",
+    "tweakpane": "^4.0.3",
+    "zustand": "^4.4.7"
   },
   "devDependencies": {
+    "@tweakpane/core": "^2.0.3",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
     "@typescript-eslint/eslint-plugin": "^6.14.0",
