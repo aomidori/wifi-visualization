@@ -14,6 +14,7 @@ const styles = {
     margin: 0 auto;
   `,
   product: css`
+    position: relative;
     width: 100px;
     margin: 6px 12px;
     text-align: center;
@@ -41,15 +42,33 @@ const styles = {
     aspect-ratio: 1 / 1;
     background-size: cover;
     background-position: center;
-  `
+  `,
+  badge: css`
+    background: #2F2F2F;
+    color: #fff;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 0px;
+    right: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  `,
 };
 
 export function Products() {
   const products = useProductsStore(state => state.products);
   const activeProduct = useProductsStore(state => state.activeProduct);
+  const anchoredProducts = useProductsStore(state => state.anchoredProducts);
   const setActiveProduct = useProductsStore(state => state.setActiveProduct);
 
   if (!products) return null;
+
+  const getProductCount = (productId: string): number => {
+    return anchoredProducts?.filter(p => p.productId === productId).length || 0;
+  };
 
   return (
     <div className={styles.container}>
@@ -59,6 +78,7 @@ export function Products() {
           className={cx(styles.product, activeProduct === product.id && 'active')}
           onClick={() => setActiveProduct(product.id)}
         >
+          <div className={styles.badge}>{getProductCount(product.id)}</div>
           <div
             className={styles.productImage}
             style={{ backgroundImage: `url(${product.imageUrl})`}}

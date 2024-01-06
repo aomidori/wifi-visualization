@@ -93,6 +93,7 @@ export function ProductMesh({
       if (e.key.toLowerCase() === 'x' && hovering) {
         removeAnchoredProduct(index);
         setEditingProduct(null);
+        setDisableOrbitControls(false);
       }
     };
     if (hovering) {
