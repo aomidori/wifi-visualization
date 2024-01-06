@@ -24,6 +24,7 @@ const styles = {
     align-items: center;
     justify-content: center;
     animation: ${blinking} 1.6s linear infinite;
+    user-select: none;
   `,
   image: css`
     aspect-ratio: auto 16 / 9;
