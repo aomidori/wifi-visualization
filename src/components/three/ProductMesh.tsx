@@ -3,14 +3,20 @@ import { useEffect, useRef } from 'react';
 import { USDZLoader } from 'three-usdz-loader';
 import * as THREE from 'three';
 
+// cached blobs
+const cached = {};
+
 const loadUSDZ = async (url: string, name: string, group): Promise<void> => {
   try {
-    const response = await fetch(url).then(checkStatus);
-    const filename = `${name}.usdz`;
-    const blob = await response.blob();
-    
+    let blob: Blob;
+    if (cached[name]) {
+      blob = cached[name];
+    } else {
+      const response = await fetch(url).then(checkStatus);
+      blob = await response.blob();
+    }
     const loader = new USDZLoader();
-    await loader.loadFile(new File([blob], filename), group);
+    await loader.loadFile(new File([blob], `${name}.usdz`), group);
   } catch (error) {
     console.error('Failed to load USDZ', error);
   }
@@ -19,13 +25,17 @@ const loadUSDZ = async (url: string, name: string, group): Promise<void> => {
 export function ProductMesh({
   productModelUrl,
   name,
+  color,
   scale = [1, 1, 1],
   position= [0, 0, 0],
+  rotation = [0, 0, 0],
 }: {
   productModelUrl: string,
+  color?: string,
   name?: string,
   scale?: [number, number, number],
   position?: [number, number, number],
+  rotation?: [number, number, number],
 }) {
   const groupRef = useRef<THREE.Group>();
 
@@ -49,6 +59,7 @@ export function ProductMesh({
       ref={groupRef}
       scale={scale}
       position={position}
+      rotation={rotation}
     />
   );
 }

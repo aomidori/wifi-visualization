@@ -15,7 +15,7 @@ const styles = {
   `,
   product: css`
     width: 100px;
-    margin: 20px;
+    margin: 6px 12px;
     text-align: center;
     font-size: 12px;
     strong, p {

@@ -1,3 +1,4 @@
+import { useProductsStore } from '#/store/products';
 import { usetSettingsStore } from '#/store/settings';
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
@@ -6,6 +7,7 @@ interface Props {
   position: [number, number, number];
   color?: number;
   size?: number;
+  onPointerDown?: (event: THREE.Event) => void;
 }
 
 const vertexShader = `
@@ -40,6 +42,7 @@ export function AnchorPoint({
   position,
   color,
   size = 0.8,
+  onPointerDown,
 }: Props) {
   const geoRef = useRef<THREE.PlaneGeometry>();
   const accent = usetSettingsStore(state => state.accent);
@@ -49,7 +52,7 @@ export function AnchorPoint({
   }, []);
 
   return (
-    <mesh position={position}>
+    <mesh position={position} onPointerDown={onPointerDown}>
       <shaderMaterial
         attach="material"
         args={[{

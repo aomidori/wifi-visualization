@@ -21,8 +21,11 @@ const materials = {
 export function FloorPlane() {
   const gltf = useGLTF('/assets/models/floor_plan/scan.gltf');
   const accent = usetSettingsStore(state => state.accent);
+  const products = useProductsStore(state => state.products);
   const activeProduct = useProductsStore(state => state.activeProduct);
   const getActiveProductData = useProductsStore(state => state.getActiveProductData);
+  const anchoredProducts = useProductsStore(state => state.anchoredProducts);
+  const addAnchoredProduct = useProductsStore(state => state.addAnchoredProduct);
 
   const [anchorPoint, setAnchorPoint] = useState<THREE.Vector3>();
   const [productFloatHeight, setProductFloatHeight] = useState<number>(4);
@@ -116,7 +119,7 @@ export function FloorPlane() {
         !!activeProductData && (
           <ProductMesh
             productModelUrl={activeProductData.modelUrl}
-            name={activeProductData.name}
+            name={activeProductData.id}
             scale={[0.1, 0.1, 0.1]}
             position={anchorPoint ?
               [anchorPoint.x, anchorPoint.y + productFloatHeight, anchorPoint.z] :
@@ -127,7 +130,16 @@ export function FloorPlane() {
       {
         // Product Anchor Point on Ceiling
         !!anchorPoint && (
-          <AnchorPoint position={[anchorPoint.x, anchorPoint.y, anchorPoint.z]}/>
+          <AnchorPoint
+            position={[anchorPoint.x, anchorPoint.y, anchorPoint.z]}
+            onPointerDown={() => {
+              if (activeProductData) {
+                const { x, y, z } = anchorPoint;
+                addAnchoredProduct(activeProductData.id, anchorPoint);
+                useProductsStore.getState().setActiveProduct(null);
+              }
+            }}
+          />
         )
       }
       {
@@ -141,6 +153,19 @@ export function FloorPlane() {
             choose a product to place on the ceiling
           </Text>
         )
+      }
+      {
+        // Anchored Products
+        anchoredProducts?.map(({productId, position}, index) => (
+          <ProductMesh
+            key={index}
+            productModelUrl={products.find(p => p.id === productId).modelUrl}
+            name={productId}
+            scale={[0.05, 0.05, 0.05]}
+            rotation={[Math.PI / 2, 0, 0]}
+            position={position.toArray()}
+          />
+        ))
       }
     </>
   ) : null;
