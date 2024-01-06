@@ -8,4 +8,11 @@ export default defineConfig({
       '#': '/src',
     },
   },
+  server: {
+    // allow SharedArrayBuffer is required for using three-usdz-loader
+    headers: {
+      'Cross-Origin-Embedder-Policy': 'require-corp',
+      'Cross-Origin-Opener-Policy': 'same-origin',
+    },
+  },
 });

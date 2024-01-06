@@ -4,4 +4,5 @@ interface ProductData {
   description?: string;
   price: string;
   imageUrl: string;
+  modelUrl: string;
 }

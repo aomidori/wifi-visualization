@@ -2850,6 +2850,18 @@ three-stdlib@^2.28.0:
     fflate "^0.6.9"
     potpack "^1.0.1"
 
+three-usdz-loader@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/three-usdz-loader/-/three-usdz-loader-1.0.7.tgz#d3d069019f9a40f73ab2126f40606aca0f316090"
+  integrity sha512-ZW3mnxYgqgD5oVdbukAOX6g8TK6HEsKYplw73ofe56fHGxDgWRhPu2ny9o2yolobyFqjR1+gcdNVGSCdzmiBBg==
+  dependencies:
+    three "^0.141.0"
+
+three@^0.141.0:
+  version "0.141.0"
+  resolved "https://registry.yarnpkg.com/three/-/three-0.141.0.tgz#16677a12b9dd0c3e1568ebad0fd09de15d5a8216"
+  integrity sha512-JaSDAPWuk4RTzG5BYRQm8YZbERUxTfTDVouWgHMisS2to4E5fotMS9F2zPFNOIJyEFTTQDDKPpsgZVThKU3pXA==
+
 three@^0.160.0:
   version "0.160.0"
   resolved "https://registry.yarnpkg.com/three/-/three-0.160.0.tgz#cd1e4dbd01aee0719280a9086d75545db52b7a8f"

@@ -1,5 +1,5 @@
 import { useProductsStore } from '#/store/products';
-import { css } from '@emotion/css';
+import { css, cx } from '@emotion/css';
 
 const styles = {
   container: css`
@@ -21,7 +21,7 @@ const styles = {
     strong, p {
       margin-top: 4px;
     }
-    &:hover {
+    &:hover, &.active {
       cursor: pointer;
       transform: scale(1.1);
     }
@@ -30,7 +30,7 @@ const styles = {
     padding: 16px;
     background: #fff;
     box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.2);
-    &:hover {
+    &:hover,  .active & {
       box-shadow: 0 0 13px 0 rgba(0, 150, 200, 0.4);
     }
     border-radius: 50%;
@@ -38,6 +38,7 @@ const styles = {
     margin-bottom: 12px;
     width: 40px;
     height: 40px;
+    aspect-ratio: 1 / 1;
     background-size: cover;
     background-position: center;
   `
@@ -45,7 +46,11 @@ const styles = {
 
 export function Products() {
   const products = useProductsStore(state => state.products);
+  const activeProduct = useProductsStore(state => state.activeProduct);
   const setActiveProduct = useProductsStore(state => state.setActiveProduct);
+
+  console.log(activeProduct);
+  
   if (!products) return null;
 
   return (
@@ -53,7 +58,7 @@ export function Products() {
       {products.map(product => (
         <div 
           key={product.id} 
-          className={styles.product}
+          className={cx(styles.product, activeProduct === product.id && 'active')}
           onClick={() => setActiveProduct(product.id)}
         >
           <div
@@ -62,7 +67,7 @@ export function Products() {
           > 
           </div>
           <strong>{product.name}</strong>
-          <p>{product.price}</p>
+          <p>{product.description}</p>
         </div>
       ))}
     </div>

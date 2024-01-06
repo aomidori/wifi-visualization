@@ -3,5 +3,6 @@ export const products: ProductData[] = [{
   name: 'UniFi AP-AC',
   price: '1899 kr',
   description: '5 & 2.4 GHz',
-  imageUrl: '/assets/images/unifi_ap_ac.jpg'
+  imageUrl: '/assets/images/unifi_ap_ac.jpg',
+  modelUrl: '/assets/models/UniFi_AP_AC_3D_model.usdz',
 }];

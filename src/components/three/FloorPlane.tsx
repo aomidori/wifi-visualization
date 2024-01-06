@@ -1,10 +1,13 @@
+import { useProductsStore } from '#/store/products';
 import { usetSettingsStore } from '#/store/settings';
 import { useGLTF } from '@react-three/drei';
 import { Vector3, useFrame } from '@react-three/fiber';
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import { ProductMesh } from './ProductMesh';
 
 const FLOOR_PLANE_POSITION: Vector3 = [0, 0, 0];
+const FLOOR_HEIGHT = 3;
 
 const materials = {
   activeMat: new THREE.MeshStandardMaterial({ color: 0x98CAE2 }),
@@ -16,6 +19,7 @@ const materials = {
 export function FloorPlane() {
   const gltf = useGLTF('/assets/models/floor_plan/scan.gltf');
   const accent = usetSettingsStore(state => state.accent);
+  const activeProductData = useProductsStore(state => state.getActiveProductData());
 
   useEffect(() => {
     materials.activeMat.color.set(accent);
@@ -56,13 +60,24 @@ export function FloorPlane() {
   };
 
   return gltf.scene ? (
-    <primitive
-      object={gltf.scene} 
-      position={FLOOR_PLANE_POSITION}
-      scale={[1, 1, 1]}
-      onPointerMove={pointerMoveHandler}
-      onPointerOut={resetMaterials}
-    />
+    <group>
+      <primitive
+        object={gltf.scene} 
+        position={FLOOR_PLANE_POSITION}
+        scale={[1, 1, 1]}
+        onPointerMove={pointerMoveHandler}
+        onPointerOut={resetMaterials}
+      />
+      {
+        activeProductData && (
+          <ProductMesh
+            productModelUrl={activeProductData.modelUrl}
+            name={activeProductData.name}
+            position={[0, 0, FLOOR_HEIGHT]}
+          />
+        )
+      }
+    </group>
   ) : null;
 }
 
