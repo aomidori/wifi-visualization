@@ -1,6 +1,6 @@
 import { useProductsStore } from '#/store/products';
 import { usetSettingsStore } from '#/store/settings';
-import { useGLTF } from '@react-three/drei';
+import { Text, useGLTF } from '@react-three/drei';
 import { Vector3, useFrame } from '@react-three/fiber';
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
@@ -25,6 +25,7 @@ export function FloorPlane() {
   const getActiveProductData = useProductsStore(state => state.getActiveProductData);
 
   const [anchorPoint, setAnchorPoint] = useState<THREE.Vector3>();
+  const [productFloatHeight, setProductFloatHeight] = useState<number>(4);
 
   useEffect(() => {
     materials.activeMat.color.set(accent);
@@ -57,30 +58,36 @@ export function FloorPlane() {
     }
   }, [activeProduct]);
 
-  const pointerMoveHandler = (e) => {
-    const intersections = e.intersections;
-    // reset materials of inactive meshes
-    // gltf.scene.traverse((child) => {
-    //   if (
-    //     child instanceof THREE.Mesh &&
-    //     child.name !== intersection.name &&
-    //     !child.name.startsWith('CeilingNode')) {
-    //     child.material = child.name.startsWith('FloorNode') ?
-    //       materials.floorMat : materials.inactiveMat;
-    //   }
-    // });
-    // highlight active mesh
-    // if (intersection && intersection instanceof THREE.Mesh) {
-    //   if (!intersection.name.startsWith('CeilingNode')) {
-    //     console.log(intersection.name);
-    //     intersection.material = materials.activeMat;
-    //   }
-    // }
+  useFrame(() => {
+    setProductFloatHeight(Math.sin(Date.now() * 0.002) * 0.5 + 4);
+  });
 
+  const pointerMoveHandler = (e) => {
+
+    const intersection = e.object;
+
+    const highlightGround = () => {
+      gltf.scene.traverse((child) => {
+        if (child instanceof THREE.Mesh && child.name.startsWith('FloorNode')) {
+          child.material = materials.activeMat;
+        }
+      });
+    };
+    // reset materials of inactive meshes
+    gltf.scene.traverse((child) => {
+      if (
+        child instanceof THREE.Mesh &&
+        child.name !== intersection.name &&
+        !child.name.startsWith('CeilingNode')) {
+        child.material = child.name.startsWith('FloorNode') ?
+          materials.floorMat : materials.inactiveMat;
+      }
+    });
     // find ceiling intersection
     const intersectionOnCeiling = e.intersections.find(o => o.object.name.startsWith('CeilingNode'));
     if (intersectionOnCeiling) {
       setAnchorPoint(intersectionOnCeiling.point);
+      highlightGround();
     }
   };
 
@@ -105,19 +112,34 @@ export function FloorPlane() {
         onPointerMove={pointerMoveHandler}
         onPointerOut={resetMaterials}
       />
-      {
+      {  // Product
         !!activeProductData && (
           <ProductMesh
             productModelUrl={activeProductData.modelUrl}
             name={activeProductData.name}
             scale={[0.1, 0.1, 0.1]}
-            position={[0, FLOOR_HEIGHT, 0]}
+            position={anchorPoint ?
+              [anchorPoint.x, anchorPoint.y + productFloatHeight, anchorPoint.z] :
+              [0, FLOOR_HEIGHT + productFloatHeight, 0]}
           />
         )
       }
       {
+        // Product Anchor Point on Ceiling
         !!anchorPoint && (
           <AnchorPoint position={[anchorPoint.x, anchorPoint.y, anchorPoint.z]}/>
+        )
+      }
+      {
+        // Instruction Text
+        !!anchorPoint && !activeProductData && (
+          <Text
+            scale={[0.8, 0.8, 0.8]}
+            position={[anchorPoint.x, anchorPoint.y + 3, anchorPoint.z]}
+            rotation={[Math.PI, Math.PI, Math.PI]}
+          >
+            choose a product to place on the ceiling
+          </Text>
         )
       }
     </>
