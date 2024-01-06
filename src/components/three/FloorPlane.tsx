@@ -11,6 +11,12 @@ import { useViewStore } from '#/store/view';
 const FLOOR_PLANE_POSITION: Vector3 = [0, 0, 0];
 const FLOOR_HEIGHT = 3;
 
+const INSTRUCTIONS = {
+  // TODO(Hanyue): center the text in the Text component
+  productPlaceholder: 'choose a product to place on the ceiling\n        or edit an existing product',
+  editingProduct: '   drag to move\n press x to delete',
+};
+
 const materials = {
   activeMat: new THREE.MeshStandardMaterial({ color: 0x98CAE2 }),
   inactiveMat: new THREE.MeshStandardMaterial({ color: 0xe3e3e3 }),
@@ -18,41 +24,48 @@ const materials = {
   ceilingMat: new THREE.MeshStandardMaterial({ color: 0xe3e3e3, transparent: true, opacity: 0.2 }),
 };
 
-const ProductPlaceholder = ({
+const InstructionText = ({
   position,
+  text,
+  textSize = 0.7,
 }: {
   position: Vector3,
+  text: string,
+  textSize?: number,
 }) => {
   const ref = useRef<THREE.Object3D>();
   const { camera } = useThree();
+  
   useFrame(() => {
     ref.current?.lookAt(camera.position);
   });
-  const placeholderText = 'choose a product to place on the ceiling\n        or edit an existing product';
-  return (
+  
+  return text ? (
     <Text
       ref={ref}
-      scale={[0.7, 0.7, 0.7]}
+      scale={[textSize, textSize, textSize]}
       color="#818181"
       position={position}
     >
-      {placeholderText}
+      {text}
     </Text>
-  );
+  ) : null;
 };
 
 // floor plane 
 export function FloorPlane() {
   const gltf = useGLTF('/assets/models/floor_plan/scan.gltf');
   const accent = usetSettingsStore(state => state.accent);
-  const activeView = useViewStore(state => state.activeView);
   const products = useProductsStore(state => state.products);
   const activeProduct = useProductsStore(state => state.activeProduct);
+  const editingProduct = useProductsStore(state => state.editingProduct);
   const getActiveProductData = useProductsStore(state => state.getActiveProductData);
   const anchoredProducts = useProductsStore(state => state.anchoredProducts);
   const addAnchoredProduct = useProductsStore(state => state.addAnchoredProduct);
+  const setEditingProduct = useProductsStore(state => state.setEditingProduct);
 
   const [anchorPoint, setAnchorPoint] = useState<THREE.Vector3>();
+  const [instruction, setInstruction] = useState<string>(INSTRUCTIONS.productPlaceholder);
   const [productFloatHeight, setProductFloatHeight] = useState<number>(4);
 
   useEffect(() => {
@@ -168,9 +181,10 @@ export function FloorPlane() {
         )
       }
       {
-        // product placeholder
-        !!anchorPoint && !activeProductData && (
-          <ProductPlaceholder
+        // instruction text
+        !!anchorPoint && !activeProductData && !editingProduct && (
+          <InstructionText
+            text={instruction}
             position={[anchorPoint.x, anchorPoint.y + 3, anchorPoint.z]}
           />
         )
@@ -186,6 +200,10 @@ export function FloorPlane() {
             scale={[0.03, 0.03, 0.03]}
             rotation={[Math.PI / 2, 0, 0]}
             position={position.toArray()}
+            onHover={() => setInstruction(INSTRUCTIONS.editingProduct)}
+            onBlur={() => setInstruction(INSTRUCTIONS.productPlaceholder)}
+            onPointerDown={() => setEditingProduct(productId)}
+            onPointerUp={() => setEditingProduct(null)}
           />
         ))
       }

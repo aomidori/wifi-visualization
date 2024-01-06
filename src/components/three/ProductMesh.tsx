@@ -29,6 +29,10 @@ export function ProductMesh({
   scale = [1, 1, 1],
   position= [0, 0, 0],
   rotation = [0, 0, 0],
+  onHover,
+  onBlur,
+  onPointerDown,
+  onPointerUp,
 }: {
   productModelUrl: string,
   color?: string,
@@ -36,6 +40,10 @@ export function ProductMesh({
   scale?: [number, number, number],
   position?: [number, number, number],
   rotation?: [number, number, number],
+  onHover?: () => void,
+  onBlur?: () => void,
+  onPointerDown?: (e?: THREE.Event) => void
+  onPointerUp?: (e?: THREE.Event) => void,
 }) {
   const groupRef = useRef<THREE.Group>();
 
@@ -59,6 +67,10 @@ export function ProductMesh({
       scale={scale}
       position={position}
       rotation={rotation}
+      onPointerEnter={() => onHover ? onHover() : null}
+      onPointerLeave={() => onBlur ? onBlur() : null}
+      onPointerDown={(e) => onPointerDown ? onPointerDown(e) : null}
+      onPointerUp={(e) => onPointerUp ? onPointerUp(e) : null}
     />
   );
 }
