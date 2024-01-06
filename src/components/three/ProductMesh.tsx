@@ -92,6 +92,7 @@ export function ProductMesh({
     const keydownHandler = (e) => {
       if (e.key.toLowerCase() === 'x' && hovering) {
         removeAnchoredProduct(index);
+        setEditingProduct(null);
       }
     };
     if (hovering) {

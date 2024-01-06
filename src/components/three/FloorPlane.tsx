@@ -12,9 +12,8 @@ const FLOOR_PLANE_POSITION: Vector3 = [0, 0, 0];
 const FLOOR_HEIGHT = 3;
 
 const INSTRUCTIONS = {
-  // TODO(Hanyue): center the text in the Text component
-  productPlaceholder: 'choose a product to place on the ceiling\n        or edit an existing product',
-  editingProduct: '   drag to move\n press x to delete',
+  productPlaceholder: 'choose a product to place on the ceiling\n or edit an existing product',
+  editingProduct: 'drag to move\n press x to delete',
 };
 
 const materials = {
@@ -33,22 +32,34 @@ const InstructionText = ({
   text: string,
   textSize?: number,
 }) => {
-  const ref = useRef<THREE.Object3D>();
+  const ref = useRef<THREE.Group>();
   const { camera } = useThree();
   
   useFrame(() => {
     ref.current?.lookAt(camera.position);
   });
+
+  useEffect(() => {
+    console.log('instruction text mounted', ref.current);
+  }, []);
+
+  const lines = text.split('\n').map(l => l.trim());
   
   return text ? (
-    <Text
-      ref={ref}
-      scale={[textSize, textSize, textSize]}
-      color="#818181"
-      position={position}
-    >
-      {text}
-    </Text>
+    <group ref={ref} position={position}>
+      {
+        lines?.map((line, index) => (
+          <Text
+            key={index}
+            scale={[textSize, textSize, textSize]}
+            color="#818181"
+            position={[0, - index * 1.0, 0]}
+          >
+            {line}
+          </Text>
+        ))
+      }
+    </group>
   ) : null;
 };
 
