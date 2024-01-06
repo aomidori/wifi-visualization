@@ -131,11 +131,12 @@ export function FloorPlane() {
       highlightGround();
       // drag product if it's in editing mode
       if (editingProduct) {
-        const product = groupRef.current?.getObjectByName(editingProduct);
-        if (product) {
-          const point = intersectionOnCeiling.point;
-          product.position.set(point.x, point.y, point.z);
-        }
+        groupRef.current?.traverse((child) => {
+          if (child.name === editingProduct.id && child.uuid === editingProduct.meshId) {
+            const point = intersectionOnCeiling.point;
+            child.position.set(point.x, point.y, point.z);
+          }
+        });
       }
     }
   };
@@ -180,7 +181,6 @@ export function FloorPlane() {
             position={[anchorPoint.x, anchorPoint.y, anchorPoint.z]}
             onPointerDown={() => {
               if (activeProductData) {
-                const { x, y, z } = anchorPoint;
                 addAnchoredProduct(activeProductData.id, anchorPoint);
                 useProductsStore.getState().setActiveProduct(null);
               }
@@ -201,14 +201,13 @@ export function FloorPlane() {
         // anchored products
         anchoredProducts?.map(({productId, position}, index) => {
           const product = products.find(p => p.id === productId);
-          const isEditing = editingProduct === productId;
           return product && (
             <ProductMesh
               key={index}
               productModelUrl={product.modelUrl}
               productId={productId}
               anchored
-              color={isEditing ? editing : product.markerColor}
+              color={product.markerColor}
               scale={[0.03, 0.03, 0.03]}
               rotation={[Math.PI / 2, 0, 0]}
               position={position.toArray()}

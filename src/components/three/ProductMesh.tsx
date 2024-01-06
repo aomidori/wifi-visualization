@@ -4,6 +4,7 @@ import { USDZLoader } from 'three-usdz-loader';
 import * as THREE from 'three';
 import { useProductsStore } from '#/store/products';
 import { useViewStore } from '#/store/view';
+import { useSettingsStore } from '#/store/settings';
 
 // cached blobs
 const cached = {};
@@ -27,6 +28,7 @@ const loadUSDZ = async (url: string, name: string, group): Promise<void> => {
 export function ProductMesh({
   productModelUrl,
   productId,
+  index,
   color,
   anchored,
   scale = [1, 1, 1],
@@ -38,6 +40,7 @@ export function ProductMesh({
   productModelUrl: string,
   productId?: string,
   color?: string,
+  index?: number,
   anchored?: boolean,
   scale?: [number, number, number],
   position?: [number, number, number],
@@ -47,6 +50,7 @@ export function ProductMesh({
 }) {
   const groupRef = useRef<THREE.Group>();
 
+  const editingColor = useSettingsStore(state => state.editing);
   const editingProduct = useProductsStore(state => state.editingProduct);
   const setEditingProduct = useProductsStore(state => state.setEditingProduct);
   const setDisableOrbitControls = useViewStore(state => state.setDisableOrbitControls);
@@ -62,8 +66,12 @@ export function ProductMesh({
   }, [productModelUrl]);
 
   useEffect(() => {
-    setMeshColor(color);
-  }, [color]);
+    if (editingProduct?.id === productId && editingProduct?.meshId === groupRef.current?.uuid) {
+      setMeshColor(editingColor);
+    } else {
+      setMeshColor(color);
+    }
+  }, [color, editingProduct]);
 
   const setMeshColor = (color: string) => {
     if (!color) {
@@ -79,8 +87,8 @@ export function ProductMesh({
     if (!anchored) {
       return;
     }
-    if (editingProduct !== productId) {
-      setEditingProduct(productId);
+    if (editingProduct?.id !== productId && editingProduct?.meshId !== groupRef.current.uuid) {
+      setEditingProduct({ id: productId, meshId: groupRef.current.uuid });
       setDisableOrbitControls(true);
     }
   };
@@ -110,7 +118,7 @@ export function ProductMesh({
       onBlur();
     }
   };
-
+  
   return (
     <group
       ref={groupRef}
