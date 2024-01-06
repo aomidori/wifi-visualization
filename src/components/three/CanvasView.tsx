@@ -1,5 +1,5 @@
 import { Canvas, useThree } from '@react-three/fiber';
-import { Stats, OrbitControls } from '@react-three/drei';
+import { OrbitControls, Stats } from '@react-three/drei';
 import { css } from '@emotion/css';
 
 import { Lightings } from '#/components/three/Lightings';
@@ -26,6 +26,7 @@ function Scene() {
       <FloorPlaneBaseGrid />
       <OrbitControls
         enabled={!isOrbitControlsDisabled}
+        maxPolarAngle={Math.PI / 2}
       />
       <Camera />
       <Stats />

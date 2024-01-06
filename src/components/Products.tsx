@@ -1,11 +1,5 @@
+import { useProductsStore } from "#/store/products";
 import { css } from "@emotion/css";
-
-const products = [{
-    id: 1,
-    name: 'UniFi AP-AC',
-    price: '1899 kr',
-    url: '/assets/images/unifi_ap_ac.jpg'
-}];
 
 const styles = {
   container: css`
@@ -43,13 +37,15 @@ const styles = {
 };
 
 export function Products() {
+  const products = useProductsStore(state => state.products);
+  if (!products) return null;
   return (
     <div className={styles.container}>
       {products.map(product => (
         <div key={product.id} className={styles.product}>
           <div
             className={styles.productImage}
-            style={{ backgroundImage: `url(${product.url})`}}
+            style={{ backgroundImage: `url(${product.imageUrl})`}}
           > 
           </div>
           <strong>{product.name}</strong>

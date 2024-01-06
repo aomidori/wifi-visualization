@@ -18,5 +18,9 @@ module.exports = {
       { allowConstantExport: true },
     ],
     'react-hooks/exhaustive-deps': 'off',
+    'sort-imports': ['error', {
+      ignoreDeclarationSort: true,
+      memberSyntaxSortOrder: ['none', 'all', 'single', 'multiple'],
+    }],
   },
 }
