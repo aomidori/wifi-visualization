@@ -5,6 +5,7 @@ export const products: ProductData[] = [{
   description: '140 m² (1,500 ft²)',
   imageUrl: '/assets/images/unifi_ap_ac.jpg',
   modelUrl: '/assets/models/UniFi_AP_AC_3D_model.usdz',
+  markerColor: '#568FE4',
 }, {
   id: 'unifi_ac_pro',
   name: 'UniFi AP U6',
@@ -12,4 +13,5 @@ export const products: ProductData[] = [{
   description: '115 m² (1,250 ft²)',
   imageUrl: '/assets/images/unifi_ap_ac.jpg',
   modelUrl: '/assets/models/UniFi_AP_AC_3D_model.usdz',
+  markerColor: '#61DB66',
 }];

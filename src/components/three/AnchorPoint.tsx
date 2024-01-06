@@ -1,5 +1,5 @@
 import { useProductsStore } from '#/store/products';
-import { usetSettingsStore } from '#/store/settings';
+import { useSettingsStore } from '#/store/settings';
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
@@ -45,7 +45,7 @@ export function AnchorPoint({
   onPointerDown,
 }: Props) {
   const geoRef = useRef<THREE.PlaneGeometry>();
-  const accent = usetSettingsStore(state => state.accent);
+  const accent = useSettingsStore(state => state.accent);
 
   useEffect(() => {
     geoRef.current?.rotateX(-Math.PI / 2);

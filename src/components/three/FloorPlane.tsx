@@ -1,5 +1,5 @@
 import { useProductsStore } from '#/store/products';
-import { usetSettingsStore } from '#/store/settings';
+import { useSettingsStore } from '#/store/settings';
 import { Text, useGLTF } from '@react-three/drei';
 import { Vector3, useFrame, useThree } from '@react-three/fiber';
 import { useEffect, useRef, useState } from 'react';
@@ -54,26 +54,23 @@ const InstructionText = ({
 
 // floor plane 
 export function FloorPlane() {
+  const groupRef = useRef<THREE.Group>();
   const gltf = useGLTF('/assets/models/floor_plan/scan.gltf');
-  const accent = usetSettingsStore(state => state.accent);
+  const accent = useSettingsStore(state => state.accent);
+  const editing = useSettingsStore(state => state.editing);
+  const activeInstructionName = useViewStore(state => state.activeInstructionName);
+  const setActiveInstructionName = useViewStore(state => state.setActiveInstructionName);
   const products = useProductsStore(state => state.products);
   const activeProduct = useProductsStore(state => state.activeProduct);
   const editingProduct = useProductsStore(state => state.editingProduct);
   const getActiveProductData = useProductsStore(state => state.getActiveProductData);
   const anchoredProducts = useProductsStore(state => state.anchoredProducts);
   const addAnchoredProduct = useProductsStore(state => state.addAnchoredProduct);
-  const setEditingProduct = useProductsStore(state => state.setEditingProduct);
 
   const [anchorPoint, setAnchorPoint] = useState<THREE.Vector3>();
-  const [instruction, setInstruction] = useState<string>(INSTRUCTIONS.productPlaceholder);
   const [productFloatHeight, setProductFloatHeight] = useState<number>(4);
 
   useEffect(() => {
-    materials.activeMat.color.set(accent);
-  }, [accent]);
-
-  useEffect(() => {
-    console.log(gltf);
     gltf.scene?.traverse((child) => {
       if (child.name === 'CeilingNode') {
         child.visible = false;
@@ -83,6 +80,10 @@ export function FloorPlane() {
       }
     });
   }, [gltf]);
+
+  useEffect(() => {
+    materials.activeMat.color.set(accent);
+  }, [accent]);
 
   useEffect(() => {
     const ceiling = gltf.scene?.getObjectByName('CeilingNode');
@@ -104,7 +105,6 @@ export function FloorPlane() {
   });
 
   const pointerMoveHandler = (e) => {
-
     const intersection = e.object;
 
     const highlightGround = () => {
@@ -129,6 +129,14 @@ export function FloorPlane() {
     if (intersectionOnCeiling) {
       setAnchorPoint(intersectionOnCeiling.point);
       highlightGround();
+      // drag product if it's in editing mode
+      if (editingProduct) {
+        const product = groupRef.current?.getObjectByName(editingProduct);
+        if (product) {
+          const point = intersectionOnCeiling.point;
+          product.position.set(point.x, point.y, point.z);
+        }
+      }
     }
   };
 
@@ -145,7 +153,7 @@ export function FloorPlane() {
   const activeProductData = getActiveProductData();
 
   return gltf.scene ? (
-    <>
+    <group ref={groupRef}>
       <primitive
         object={gltf.scene} 
         position={FLOOR_PLANE_POSITION}
@@ -157,7 +165,7 @@ export function FloorPlane() {
         !!activeProductData && (
           <ProductMesh
             productModelUrl={activeProductData.modelUrl}
-            name={activeProductData.id}
+            productId={activeProductData.id}
             scale={[0.1, 0.1, 0.1]}
             position={anchorPoint ?
               [anchorPoint.x, anchorPoint.y + productFloatHeight, anchorPoint.z] :
@@ -167,7 +175,7 @@ export function FloorPlane() {
       }
       {
         // product anchor point on ceiling
-        !!anchorPoint && (
+        !!anchorPoint && !editingProduct && (
           <AnchorPoint
             position={[anchorPoint.x, anchorPoint.y, anchorPoint.z]}
             onPointerDown={() => {
@@ -182,32 +190,35 @@ export function FloorPlane() {
       }
       {
         // instruction text
-        !!anchorPoint && !activeProductData && !editingProduct && (
+        !!anchorPoint && !activeProduct && !editingProduct && INSTRUCTIONS[activeInstructionName] && (
           <InstructionText
-            text={instruction}
+            text={INSTRUCTIONS[activeInstructionName]}
             position={[anchorPoint.x, anchorPoint.y + 3, anchorPoint.z]}
           />
         )
       }
       {
         // anchored products
-        anchoredProducts?.map(({productId, position}, index) => (
-          <ProductMesh
-            key={index}
-            productModelUrl={products.find(p => p.id === productId).modelUrl}
-            name={productId}
-            color={accent}
-            scale={[0.03, 0.03, 0.03]}
-            rotation={[Math.PI / 2, 0, 0]}
-            position={position.toArray()}
-            onHover={() => setInstruction(INSTRUCTIONS.editingProduct)}
-            onBlur={() => setInstruction(INSTRUCTIONS.productPlaceholder)}
-            onPointerDown={() => setEditingProduct(productId)}
-            onPointerUp={() => setEditingProduct(null)}
-          />
-        ))
+        anchoredProducts?.map(({productId, position}, index) => {
+          const product = products.find(p => p.id === productId);
+          const isEditing = editingProduct === productId;
+          return product && (
+            <ProductMesh
+              key={index}
+              productModelUrl={product.modelUrl}
+              productId={productId}
+              anchored
+              color={isEditing ? editing : product.markerColor}
+              scale={[0.03, 0.03, 0.03]}
+              rotation={[Math.PI / 2, 0, 0]}
+              position={position.toArray()}
+              onHover={() => setActiveInstructionName('editingProduct')}
+              onBlur={() => setActiveInstructionName('productPlaceholder')}
+            />
+          );
+        })
       }
-    </>
+    </group>
   ) : null;
 }
 

@@ -5,4 +5,7 @@ interface ProductData {
   price: string;
   imageUrl: string;
   modelUrl: string;
+  markerColor: string;
 }
+
+type InstructionName = 'productPlaceholder' | 'editingProduct';
