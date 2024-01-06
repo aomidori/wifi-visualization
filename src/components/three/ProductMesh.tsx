@@ -45,9 +45,8 @@ export function ProductMesh({
       loadUSDZ(productModelUrl, name, meshGroup).then(() => {
         meshGroup.name = name;
         meshGroup.children.forEach((child: THREE.Mesh) => {
-          if (child.material instanceof THREE.MeshPhysicalMaterial) {
-            child.material.color.set(0x00ff00);
-            child.material.needsUpdate = true;
+          if (color) {
+            child.material['color']?.set(color || 0x00ff00).lerp(new THREE.Color(0x00eeff), 0.5);
           }
         });
       });

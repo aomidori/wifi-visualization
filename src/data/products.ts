@@ -1,6 +1,6 @@
 export const products: ProductData[] = [{
   id: 'unifi_ap_ac',
-  name: 'UniFi AP-AC',
+  name: 'UniFi AP AC',
   price: '1899 kr',
   description: '140 m² (1,500 ft²)',
   imageUrl: '/assets/images/unifi_ap_ac.jpg',

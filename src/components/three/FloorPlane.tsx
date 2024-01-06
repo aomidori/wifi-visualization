@@ -1,11 +1,12 @@
 import { useProductsStore } from '#/store/products';
 import { usetSettingsStore } from '#/store/settings';
 import { Text, useGLTF } from '@react-three/drei';
-import { Vector3, useFrame } from '@react-three/fiber';
+import { Vector3, useFrame, useThree } from '@react-three/fiber';
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { ProductMesh } from './ProductMesh';
 import { AnchorPoint } from './AnchorPoint';
+import { useViewStore } from '#/store/view';
 
 const FLOOR_PLANE_POSITION: Vector3 = [0, 0, 0];
 const FLOOR_HEIGHT = 3;
@@ -17,10 +18,32 @@ const materials = {
   ceilingMat: new THREE.MeshStandardMaterial({ color: 0xe3e3e3, transparent: true, opacity: 0.2 }),
 };
 
+const ProductPlaceholder = ({
+  position,
+}: {
+  position: Vector3,
+}) => {
+  const ref = useRef<THREE.Object3D>();
+  const { camera } = useThree();
+  useFrame(() => {
+    ref.current?.lookAt(camera.position);
+  });
+  return (
+    <Text
+      ref={ref}
+      scale={[0.8, 0.8, 0.8]}
+      position={position}
+    >
+      choose a product to place on the ceiling
+    </Text>
+  );
+};
+
 // floor plane 
 export function FloorPlane() {
   const gltf = useGLTF('/assets/models/floor_plan/scan.gltf');
   const accent = usetSettingsStore(state => state.accent);
+  const activeView = useViewStore(state => state.activeView);
   const products = useProductsStore(state => state.products);
   const activeProduct = useProductsStore(state => state.activeProduct);
   const getActiveProductData = useProductsStore(state => state.getActiveProductData);
@@ -115,7 +138,7 @@ export function FloorPlane() {
         onPointerMove={pointerMoveHandler}
         onPointerOut={resetMaterials}
       />
-      {  // Product
+      {  // hovering active product
         !!activeProductData && (
           <ProductMesh
             productModelUrl={activeProductData.modelUrl}
@@ -128,7 +151,7 @@ export function FloorPlane() {
         )
       }
       {
-        // Product Anchor Point on Ceiling
+        // product anchor point on ceiling
         !!anchorPoint && (
           <AnchorPoint
             position={[anchorPoint.x, anchorPoint.y, anchorPoint.z]}
@@ -143,24 +166,21 @@ export function FloorPlane() {
         )
       }
       {
-        // Instruction Text
+        // product placeholder
         !!anchorPoint && !activeProductData && (
-          <Text
-            scale={[0.8, 0.8, 0.8]}
+          <ProductPlaceholder
             position={[anchorPoint.x, anchorPoint.y + 3, anchorPoint.z]}
-            rotation={[Math.PI, Math.PI, Math.PI]}
-          >
-            choose a product to place on the ceiling
-          </Text>
+          />
         )
       }
       {
-        // Anchored Products
+        // anchored products
         anchoredProducts?.map(({productId, position}, index) => (
           <ProductMesh
             key={index}
             productModelUrl={products.find(p => p.id === productId).modelUrl}
             name={productId}
+            color={accent}
             scale={[0.05, 0.05, 0.05]}
             rotation={[Math.PI / 2, 0, 0]}
             position={position.toArray()}
