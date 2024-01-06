@@ -49,8 +49,6 @@ export function Products() {
   const activeProduct = useProductsStore(state => state.activeProduct);
   const setActiveProduct = useProductsStore(state => state.setActiveProduct);
 
-  console.log(activeProduct);
-  
   if (!products) return null;
 
   return (
