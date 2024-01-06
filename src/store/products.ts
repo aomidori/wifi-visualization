@@ -2,8 +2,6 @@ import { create } from 'zustand';
 
 import { products } from '#/data/products';
 
-export type SceneActiveView = 'idle' | 'topView';
-
 interface ProductsStoreState {
   products: typeof products;
   // product to be installed on the ceiling

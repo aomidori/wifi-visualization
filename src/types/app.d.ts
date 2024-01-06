@@ -1,3 +1,5 @@
+type SceneActiveView = 'idle' | 'topView';
+
 interface ProductData {
   id: string;
   name: string;

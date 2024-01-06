@@ -1,4 +1,4 @@
-import { SceneActiveView, useViewStore } from '#/store/view';
+import { useViewStore } from '#/store/view';
 import { ToggleButtons } from './elements/ToggleButtons';
 
 const VIEW_TOGGLE_OPTIONS: { label: string, value: SceneActiveView}[] = [
