@@ -54,11 +54,13 @@ export function ProductMesh({
 
   const editingColor = useSettingsStore(state => state.editing);
   const editingProduct = useProductsStore(state => state.editingProduct);
+  const hoveringProduct = useProductsStore(state => state.hoveringProduct);
   const setEditingProduct = useProductsStore(state => state.setEditingProduct);
+  const setHoveringProduct = useProductsStore(state => state.setHoveringProduct);
   const removeAnchoredProduct = useProductsStore(state => state.removeAnchoredProduct);
   const setDisableOrbitControls = useViewStore(state => state.setDisableOrbitControls);
 
-  const [hovering, setHovering] = useState(false);
+  const hovering = hoveringProduct?.meshId === groupRef.current?.uuid;
 
   useEffect(() => {
     return () => {
@@ -93,7 +95,9 @@ export function ProductMesh({
       if (e.key.toLowerCase() === 'x' && hovering) {
         removeAnchoredProduct(index);
         setEditingProduct(null);
+        setHoveringProduct(null);
         setDisableOrbitControls(false);
+        onBlur();
       }
     };
     if (hovering) {
@@ -141,7 +145,7 @@ export function ProductMesh({
     if (onHover) {
       onHover();
     }
-    setHovering(true);
+    setHoveringProduct({id: productId, meshId: groupRef.current.uuid});
   };
 
   const pointerLeaveHandler = (e) => {
@@ -151,7 +155,7 @@ export function ProductMesh({
     if (onBlur) {
       onBlur();
     }
-    setHovering(false);
+    setHoveringProduct({id: productId, meshId: groupRef.current.uuid});
   };
   
   return (

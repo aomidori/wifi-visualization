@@ -14,6 +14,8 @@ interface ProductsStoreState {
   activeProduct?: string;
   // products that are already installed on the ceiling
   anchoredProducts?: AnchordProduct[];
+  // hovered ceiling product
+  hoveringProduct?: { id: string; meshId: string };
   // selected product that's already installed on the ceiling
   editingProduct?: { id: string; meshId: string };
   getActiveProductData?: () => ProductData;
@@ -22,6 +24,7 @@ interface ProductsStoreState {
   removeAnchoredProduct: (index: number) => void;
   updateAnchoredProducts: (products: AnchordProduct[]) => void;
   setEditingProduct: (data: {id: string, meshId}) => void;
+  setHoveringProduct: (data: {id: string, meshId}) => void;
 }
 
 export const useProductsStore = create<ProductsStoreState>()((set, get) => ({
@@ -35,4 +38,5 @@ export const useProductsStore = create<ProductsStoreState>()((set, get) => ({
     { anchoredProducts: get().anchoredProducts.filter((_, i) => i !== index) }),
   updateAnchoredProducts: (products) => set({ anchoredProducts: products }),
   setEditingProduct: (data) => set({ editingProduct: data }),
+  setHoveringProduct: (data) => set({ hoveringProduct: data }),
 }));

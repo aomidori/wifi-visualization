@@ -45,16 +45,23 @@ export function AnchorPoint({
   onPointerDown,
 }: Props) {
   const geoRef = useRef<THREE.PlaneGeometry>();
+  const matRef = useRef<THREE.ShaderMaterial>();
   const accent = useSettingsStore(state => state.accent);
 
   useEffect(() => {
     geoRef.current?.rotateX(-Math.PI / 2);
+
+    return () => {
+      geoRef.current?.dispose();
+      matRef.current?.dispose();
+    };
   }, []);
 
   return (
     <mesh position={position} onPointerDown={onPointerDown}>
       <shaderMaterial
         attach="material"
+        ref={matRef}
         args={[{
           uniforms: {
             u_inner_color: { value: new THREE.Color(color || accent) },

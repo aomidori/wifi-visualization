@@ -7,6 +7,7 @@ import * as THREE from 'three';
 import { ProductMesh } from './ProductMesh';
 import { AnchorPoint } from './AnchorPoint';
 import { useViewStore } from '#/store/view';
+import { dispose } from '#/utils/helpers';
 
 const FLOOR_PLANE_POSITION: Vector3 = [0, 0, 0];
 const FLOOR_HEIGHT = 3;
@@ -19,6 +20,7 @@ const INSTRUCTIONS = {
 const materials = {
   activeMat: new THREE.MeshStandardMaterial({ color: 0x98CAE2 }),
   inactiveMat: new THREE.MeshStandardMaterial({ color: 0xe3e3e3 }),
+  warningMat: new THREE.MeshStandardMaterial({ color: 0xff0000 }),
   floorMat: new THREE.MeshStandardMaterial({ color: 0xc1c1c1 }),
   ceilingMat: new THREE.MeshStandardMaterial({ color: 0xe3e3e3, transparent: true, opacity: 0.2 }),
 };
@@ -40,7 +42,7 @@ const InstructionText = ({
   });
 
   useEffect(() => {
-    console.log('instruction text mounted', ref.current);
+    return () => dispose(ref.current);
   }, []);
 
   const lines = text.split('\n').map(l => l.trim());
@@ -68,11 +70,11 @@ export function FloorPlane() {
   const groupRef = useRef<THREE.Group>();
   const gltf = useGLTF('/assets/models/floor_plan/scan.gltf');
   const accent = useSettingsStore(state => state.accent);
-  const editing = useSettingsStore(state => state.editing);
   const activeInstructionName = useViewStore(state => state.activeInstructionName);
   const setActiveInstructionName = useViewStore(state => state.setActiveInstructionName);
   const products = useProductsStore(state => state.products);
   const activeProduct = useProductsStore(state => state.activeProduct);
+  const hoveringProduct = useProductsStore(state => state.hoveringProduct);
   const editingProduct = useProductsStore(state => state.editingProduct);
   const getActiveProductData = useProductsStore(state => state.getActiveProductData);
   const anchoredProducts = useProductsStore(state => state.anchoredProducts);
@@ -97,6 +99,7 @@ export function FloorPlane() {
   }, [accent]);
 
   useEffect(() => {
+    // show the transarent shape of the ceiling when pending to place a product
     const ceiling = gltf.scene?.getObjectByName('CeilingNode');
     if (activeProduct) {
       ceiling.visible = true;
