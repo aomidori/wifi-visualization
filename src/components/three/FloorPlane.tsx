@@ -204,6 +204,7 @@ export function FloorPlane() {
           return product && (
             <ProductMesh
               key={index}
+              index={index}
               productModelUrl={product.modelUrl}
               productId={productId}
               anchored

@@ -5,6 +5,8 @@ import * as THREE from 'three';
 import { useProductsStore } from '#/store/products';
 import { useViewStore } from '#/store/view';
 import { useSettingsStore } from '#/store/settings';
+import { dispose } from '#/utils/helpers';
+import { is } from '@react-three/fiber/dist/declarations/src/core/utils';
 
 // cached blobs
 const cached = {};
@@ -53,7 +55,20 @@ export function ProductMesh({
   const editingColor = useSettingsStore(state => state.editing);
   const editingProduct = useProductsStore(state => state.editingProduct);
   const setEditingProduct = useProductsStore(state => state.setEditingProduct);
+  const removeAnchoredProduct = useProductsStore(state => state.removeAnchoredProduct);
   const setDisableOrbitControls = useViewStore(state => state.setDisableOrbitControls);
+
+  const [hovering, setHovering] = useState(false);
+
+  useEffect(() => {
+    return () => {
+      // dispose product if removed from the scene
+      if (groupRef.current) {
+        groupRef.current.parent?.remove(groupRef.current);
+        dispose(groupRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (productModelUrl) {
@@ -72,6 +87,22 @@ export function ProductMesh({
       setMeshColor(color);
     }
   }, [color, editingProduct]);
+
+  useEffect(() => {
+    const keydownHandler = (e) => {
+      if (e.key.toLowerCase() === 'x' && hovering) {
+        removeAnchoredProduct(index);
+      }
+    };
+    if (hovering) {
+      window.addEventListener('keydown', keydownHandler);
+    } else {
+      window.removeEventListener('keydown', keydownHandler);
+    }
+    return () => {
+      window.removeEventListener('keydown', keydownHandler);
+    };
+  }, [hovering]);
 
   const setMeshColor = (color: string) => {
     if (!color) {
@@ -108,6 +139,7 @@ export function ProductMesh({
     if (onHover) {
       onHover();
     }
+    setHovering(true);
   };
 
   const pointerLeaveHandler = (e) => {
@@ -117,6 +149,7 @@ export function ProductMesh({
     if (onBlur) {
       onBlur();
     }
+    setHovering(false);
   };
   
   return (
