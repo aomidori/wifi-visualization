@@ -28,13 +28,15 @@ const ProductPlaceholder = ({
   useFrame(() => {
     ref.current?.lookAt(camera.position);
   });
+  const placeholderText = 'choose a product to place on the ceiling\n        or edit an existing product';
   return (
     <Text
       ref={ref}
-      scale={[0.8, 0.8, 0.8]}
+      scale={[0.7, 0.7, 0.7]}
+      color="#818181"
       position={position}
     >
-      choose a product to place on the ceiling
+      {placeholderText}
     </Text>
   );
 };
@@ -181,7 +183,7 @@ export function FloorPlane() {
             productModelUrl={products.find(p => p.id === productId).modelUrl}
             name={productId}
             color={accent}
-            scale={[0.05, 0.05, 0.05]}
+            scale={[0.03, 0.03, 0.03]}
             rotation={[Math.PI / 2, 0, 0]}
             position={position.toArray()}
           />
