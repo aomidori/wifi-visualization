@@ -1,3 +1,4 @@
+import { usetSettingsStore } from '#/store/settings';
 import { useGLTF } from '@react-three/drei';
 import { Vector3, useFrame } from '@react-three/fiber';
 import { useEffect, useRef } from 'react';
@@ -6,14 +7,19 @@ import * as THREE from 'three';
 const FLOOR_PLANE_POSITION: Vector3 = [0, 0, 0];
 
 const materials = {
-  activeMat: new THREE.MeshStandardMaterial({ color: 0xe3e3e3 }),
-  inactiveMat: new THREE.MeshStandardMaterial({ color: 0xffffff }),
-  floorMat: new THREE.MeshStandardMaterial({ color: 0xe3e3e3 }),
+  activeMat: new THREE.MeshStandardMaterial({ color: 0x98CAE2 }),
+  inactiveMat: new THREE.MeshStandardMaterial({ color: 0xe3e3e3 }),
+  floorMat: new THREE.MeshStandardMaterial({ color: 0xc1c1c1 }),
 };
 
 // floor plane 
 export function FloorPlane() {
   const gltf = useGLTF('/assets/models/floor_plan/scan.gltf');
+  const accent = usetSettingsStore(state => state.accent);
+
+  useEffect(() => {
+    materials.activeMat.color.set(accent);
+  }, [accent]);
 
   useEffect(() => {
     console.log(gltf);
@@ -41,12 +47,21 @@ export function FloorPlane() {
     }
   };
 
+  const resetMaterials = () => {
+    gltf.scene.traverse((child) => {
+      if (child instanceof THREE.Mesh) {
+        child.material = child.name.includes('Floor') ? materials.floorMat : materials.inactiveMat;
+      }
+    });
+  };
+
   return gltf.scene ? (
     <primitive
       object={gltf.scene} 
       position={FLOOR_PLANE_POSITION}
       scale={[1, 1, 1]}
       onPointerMove={pointerMoveHandler}
+      onPointerOut={resetMaterials}
     />
   ) : null;
 }

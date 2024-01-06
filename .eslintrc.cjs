@@ -4,13 +4,16 @@ module.exports = {
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
+    'plugin:react/recommended',
     'plugin:react-hooks/recommended',
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs'],
   parser: '@typescript-eslint/parser',
-  plugins: ['react-refresh'],
+  plugins: ['react-refresh', 'react'],
   rules: {
     'no-unused-vars': 'off',
+    'quotes': [2, 'single'],
+    'indent': [2, 2],
     '@typescript-eslint/no-unused-vars': ['off'],
     'semi': ['error', 'always'],
     'react-refresh/only-export-components': [
@@ -22,5 +25,9 @@ module.exports = {
       ignoreDeclarationSort: true,
       memberSyntaxSortOrder: ['none', 'all', 'single', 'multiple'],
     }],
+    'react/jsx-indent': [2, 2],
+    'react/jsx-indent-props': [2, 2],
+    'react/no-unknown-property': 'off',
+    'react/react-in-jsx-scope': 'off',
   },
 }

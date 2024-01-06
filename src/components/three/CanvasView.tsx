@@ -29,7 +29,7 @@ function Scene() {
         maxPolarAngle={Math.PI / 2}
       />
       <Camera />
-      <Stats />
+      {/* <Stats /> */}
     </>
   );
 }

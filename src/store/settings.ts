@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 interface Settings {
-  color: string;
+  accent: string;
 }
 
 interface SettingsState extends Settings {
@@ -12,7 +12,7 @@ interface SettingsState extends Settings {
 
 export const usetSettingsStore = create<SettingsState>()(set => ({
   initialized: false,
-  color: '#ff0055',
+  accent: '#98CAE2',
   setInitialized: (initialized) => set({ initialized }),
   setSetting: (key, value) => set({ [key]: value }),
 }));
