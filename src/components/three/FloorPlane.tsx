@@ -134,6 +134,14 @@ export function FloorPlane() {
     setAnchorPoint(null);
   };
 
+  const pointerDownHandler = (e) => {
+    const intersectionOnCeiling = e.intersections.find(o => o.object.name.startsWith('CeilingNode'));
+    if (activeProductData) {
+      addAnchoredProduct(activeProductData.id, intersectionOnCeiling.point);
+      setActiveProduct(null);
+    }
+  }
+
   const activeProductData = getActiveProductData();
 
   return (
@@ -144,6 +152,7 @@ export function FloorPlane() {
         scale={[1, 1, 1]}
         onPointerMove={pointerMoveHandler}
         onPointerOut={pointerOutHandler}
+        onPointerDown={pointerDownHandler}
       />
       {  // hovering active product
         !!activeProductData && (
@@ -163,12 +172,6 @@ export function FloorPlane() {
         !!anchorPoint && !editingProduct && (
           <AnchorPoint
             position={[anchorPoint.x, anchorPoint.y, anchorPoint.z]}
-            onPointerDown={() => {
-              if (activeProductData) {
-                addAnchoredProduct(activeProductData.id, anchorPoint);
-                setActiveProduct(null);
-              }
-            }}
           />
         )
       }

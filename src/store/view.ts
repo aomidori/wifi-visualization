@@ -15,11 +15,13 @@ interface ViewState {
   // save camera position when switching between ground/top views
   cameraLastState?: CameraState
   isOrbitControlsDisabled?: boolean;
+  isMobileView?: boolean;
   setActiveView: (activeView: SceneActiveView) => void;
   setActiveInstructionName: (name: InstructionName) => void;
   setDisableOrbitControls: (value: boolean) => void;
   setCameraLastState: (data: CameraState) => void;
   setShowNavigationInstruction: (value: boolean) => void;
+  setIsMobileView: (value: boolean) => void;
 }
 
 export const useViewStore = create<ViewState>()(set => ({
@@ -31,4 +33,5 @@ export const useViewStore = create<ViewState>()(set => ({
   setDisableOrbitControls: (value) => set({ isOrbitControlsDisabled: value }),
   setCameraLastState: (data) => set({ cameraLastState: data }),
   setShowNavigationInstruction: (value) => set({ showNavigationInstruction: value }),
+  setIsMobileView: (value) => set({ isMobileView: value }),
 }));

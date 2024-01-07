@@ -13,6 +13,9 @@ const styles = {
     padding: 20px;
     margin: 0 auto;
     user-select: none;
+    @media (max-width: 768px) {
+      padding: 0px;
+    }
   `,
   product: css`
     position: relative;
@@ -26,6 +29,9 @@ const styles = {
     &:hover, &.active {
       cursor: pointer;
       transform: scale(1.1);
+    }
+    @media (max-width: 768px) {
+      font-size: 10px;
     }
   `,
   productImage: css`

@@ -62,11 +62,19 @@ const styles = {
 };
 
 export function InstructionInfo() {
-  const activeView = useViewStore(state => state.activeView);
+  const isMobileView = useViewStore(state => state.isMobileView);
   const showNavigationInstruction = useViewStore(state => state.showNavigationInstruction);
 
   const fadeIn = `${animations.fadeIn} 0.3s ease 0s 1 normal forwards`;
   const fadeOut = `${animations.fadeOut} 0.3s ease 0s 1 normal forwards`;
+  
+  if (isMobileView) {
+    return (
+      <div className={styles.container}>
+        <p>use a bigger screen for better experience</p>
+      </div>
+    );
+  }
 
   return (
     <>

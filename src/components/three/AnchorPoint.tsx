@@ -1,4 +1,3 @@
-import { useProductsStore } from '#/store/products';
 import { useSettingsStore } from '#/store/settings';
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
