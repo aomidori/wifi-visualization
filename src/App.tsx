@@ -1,4 +1,4 @@
-import { NavigationInstruction } from '#/components/NavigationInstruction';
+import { InstructionInfo } from '#/components/InstructionInfo';
 import { TweakPane } from '#/components/TweakPane';
 import { TopViewToggle } from '#/components/TopViewToggle';
 import { CanvasView } from '#/components/three/CanvasView';
@@ -9,7 +9,7 @@ function App() {
     <>
       <CanvasView />
       <TopViewToggle />
-      <NavigationInstruction />
+      <InstructionInfo />
       <Products />
       <TweakPane />
     </>

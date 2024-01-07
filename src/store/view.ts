@@ -7,12 +7,15 @@ interface ViewState {
   // instruction 3D hover text
   activeInstructionName: InstructionName;
   // save camera position when switching between ground/top views
-  cameraLastPosition?: THREE.Vector3;
+  cameraLastState?: {
+    position: THREE.Vector3;
+    rotation: THREE.Euler;
+  };
   isOrbitControlsDisabled?: boolean;
   setActiveView: (activeView: SceneActiveView) => void;
   setActiveInstructionName: (name: InstructionName) => void;
   setDisableOrbitControls: (value: boolean) => void;
-  setCameraLastPosition: (position: THREE.Vector3) => void;
+  setCameraLastState: (data: { position: THREE.Vector3, rotation: THREE.Euler }) => void;
   setShowNavigationInstruction: (value: boolean) => void;
 }
 
@@ -23,6 +26,6 @@ export const useViewStore = create<ViewState>()(set => ({
   setActiveView: (activeView: SceneActiveView) => set({ activeView }),
   setActiveInstructionName: (activeInstructionName: InstructionName) => set({ activeInstructionName }),
   setDisableOrbitControls: (value) => set({ isOrbitControlsDisabled: value }),
-  setCameraLastPosition: (position) => set({ cameraLastPosition: position }),
+  setCameraLastState: (data) => set({ cameraLastState: data }),
   setShowNavigationInstruction: (value) => set({ showNavigationInstruction: value }),
 }));

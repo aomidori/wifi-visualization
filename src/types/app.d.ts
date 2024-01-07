@@ -1,4 +1,4 @@
-type SceneActiveView = 'idle' | 'topView';
+type SceneActiveView = 'idle' | 'topView' | 'navigationView';
 
 interface ProductData {
   id: string;

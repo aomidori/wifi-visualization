@@ -56,7 +56,7 @@ export function ToggleButtons({
   onChange,
   buttonSize = 'medium',
 }: Props) {
-  const activeIndex = options.findIndex(({ value }) => value === selected);
+  const activeIndex = Math.max(0, options.findIndex(({ value }) => value === selected));
 
   const buttonWidth = buttonSize === 'small' ? 60 : buttonSize === 'medium' ? 88 : 120;
   const buttonHeight = buttonSize === 'small' ? 30 : buttonSize === 'medium' ? 40 : 50;
@@ -69,10 +69,11 @@ export function ToggleButtons({
           left: ${buttonWidth * activeIndex}px;
           width: ${buttonWidth - 2}px;
           height: ${buttonHeight - 2}px;
+          z-index: 0;
         `}/>
-        {options?.map(({ label, value }) => (
+        {options?.map(({ label, value }, i) => (
           <div
-            className={cx(styles.toggleButton, value === selected ? 'active' : '')}
+            className={cx(styles.toggleButton, i === activeIndex ? 'active' : '')}
             style={{ width: buttonWidth, height: buttonHeight, lineHeight: `${buttonHeight}px`, fontSize, }}
             key={value}
             onClick={() => {

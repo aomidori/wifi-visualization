@@ -13,7 +13,7 @@ export function TopViewToggle() {
   return (
     <ToggleButtons
       options={VIEW_TOGGLE_OPTIONS}
-      selected={activeView}
+      selected={activeView === 'navigationView' ? 'idle' : activeView}
       onChange={setActiveView}
       buttonSize="medium"
     />

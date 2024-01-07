@@ -51,7 +51,7 @@ const styles = {
   `
 };
 
-export function NavigationInstruction() {
+export function InstructionInfo() {
   const showNavigationInstruction = useViewStore(state => state.showNavigationInstruction);
   const setShowNavigationInstruction = useViewStore(state => state.setShowNavigationInstruction);
 
