@@ -42,14 +42,14 @@ export function Camera() {
   });
 
   // switch to eye level view when moving around
-  const goToEyeLevelView = (resetRotationOnAxisX?: boolean) => {
+  const goToEyeLevelView = () => {
     camera.position.y = eyeLevelHeight;
-    resetCameraRotationOnAxisX()
   }
 
   const resetCameraRotationOnAxisX = () => {
     camera.rotation.x = 0;
     camera.setRotationFromAxisAngle(new THREE.Vector3(1, 0, 0), 0);
+    camera.updateMatrixWorld();
   }
 
   const updateCamera = () => {
@@ -117,10 +117,11 @@ export function Camera() {
         if (event.key === NAVIGATION_KEYS[key]) {
           if (activeView !== 'navigationView') {
             setActiveView('navigationView');
-            return;
           }
           if (rotationNeedsReset) {
             resetCameraRotationOnAxisX();
+            setRotationNeedsReset(false);
+            return;
           }
           setDirection(key);
           setDisableOrbitControls(true);
@@ -159,7 +160,8 @@ export function Camera() {
         .start();
     } else if (activeView === 'navigationView') {
       // ground navigation view activated
-      goToEyeLevelView(true);
+      goToEyeLevelView();
+      resetCameraRotationOnAxisX();
       camera.up = new THREE.Vector3(0, 1, 0);
       setDisableOrbitControls(true);
     } else {
@@ -182,7 +184,7 @@ export function Camera() {
       window.removeEventListener('keyup', keyupHandler);
       window.removeEventListener('pointerdown', pointerDonwHandler);
     };
-  }, [activeView]);
+  }, [activeView, rotationNeedsReset]);
 
   useEffect(() => {
     if (activeProduct) {
