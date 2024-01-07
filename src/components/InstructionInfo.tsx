@@ -53,20 +53,7 @@ const styles = {
 
 export function InstructionInfo() {
   const showNavigationInstruction = useViewStore(state => state.showNavigationInstruction);
-  const setShowNavigationInstruction = useViewStore(state => state.setShowNavigationInstruction);
 
-  useEffect(() => {
-    const keydownHandler = (e) => {
-      if (e.key.startsWith('Arrow')) {
-        setTimeout(() => {
-          setShowNavigationInstruction(false);
-        }, 1000);
-      }
-    };
-    window.addEventListener('keydown', keydownHandler);
-    return () => window.removeEventListener('keydown', keydownHandler);
-  }, []);
-  
   return (
     <div
       className={styles.container}

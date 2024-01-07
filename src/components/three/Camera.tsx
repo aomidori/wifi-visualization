@@ -24,6 +24,7 @@ export function Camera() {
   const activeView = useViewStore(state => state.activeView);
   const setActiveView = useViewStore(state => state.setActiveView);
   const setDisableOrbitControls = useViewStore(state => state.setDisableOrbitControls);
+  const setShowNavigationInstruction = useViewStore(state => state.setShowNavigationInstruction);
   const cameraLastState = useViewStore(state => state.cameraLastState);
   const setCameraLastState = useViewStore(state => state.setCameraLastState);
   const { camera } = useThree();
@@ -104,6 +105,9 @@ export function Camera() {
           } else {
             setDirection(key);
             setDisableOrbitControls(true);
+            setTimeout(() => {
+              setShowNavigationInstruction(false);
+            }, 1000);
           }
         }
       })
@@ -116,6 +120,9 @@ export function Camera() {
     };
     const pointerDonwHandler = () => {
       setDisableOrbitControls(false);
+      setTimeout(() => {
+        setShowNavigationInstruction(true);
+      }, 1000);
     }
     window.addEventListener('keydown', keydownHandler);
     window.addEventListener('keyup', keyupHandler);
