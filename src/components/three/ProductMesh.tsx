@@ -7,18 +7,20 @@ import { useSettingsStore } from '#/store/settings';
 import { dispose } from '#/utils/helpers';
 
 import { useUSDZ } from './loaders/useUSDZ';
+import { useFrame } from '@react-three/fiber';
 
 interface Props {
-  productModelUrl: string,
-  productId?: string,
-  color?: string,
-  index?: number,
-  anchored?: boolean,
-  scale?: [number, number, number],
-  position?: [number, number, number],
-  rotation?: [number, number, number],
-  onHover?: () => void,
-  onBlur?: () => void,
+  productModelUrl: string;
+  productId?: string;
+  color?: string;
+  index?: number;
+  anchored?: boolean;
+  scale?: [number, number, number];
+  position?: [number, number, number];
+  rotation?: [number, number, number];
+  autoRotate?: boolean;
+  onHover?: () => void;
+  onBlur?: () => void;
 }
 
 export function ProductMesh({
@@ -30,6 +32,7 @@ export function ProductMesh({
   scale = [1, 1, 1],
   position= [0, 0, 0],
   rotation = [0, 0, 0],
+  autoRotate,
   onHover,
   onBlur,
 }: Props) {
@@ -45,6 +48,12 @@ export function ProductMesh({
   const setDisableOrbitControls = useViewStore(state => state.setDisableOrbitControls);
 
   const hovering = hoveringProduct?.meshId === groupRef.current?.uuid;
+
+  useFrame(() => {
+    if (autoRotate) {
+      groupRef.current.rotation.y += 0.02;
+    }
+  });
 
   useEffect(() => {
     return () => {

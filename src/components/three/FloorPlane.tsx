@@ -150,6 +150,7 @@ export function FloorPlane() {
           <ProductMesh
             productModelUrl={activeProductData.modelUrl}
             productId={activeProductData.id}
+            autoRotate
             scale={[0.1, 0.1, 0.1]}
             position={anchorPoint ?
               [anchorPoint.x, anchorPoint.y + productFloatHeight, anchorPoint.z] :
