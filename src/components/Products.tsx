@@ -12,6 +12,7 @@ const styles = {
     align-items: center;
     padding: 20px;
     margin: 0 auto;
+    user-select: none;
   `,
   product: css`
     position: relative;

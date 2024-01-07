@@ -137,15 +137,15 @@ export function Camera() {
       recordingKeydownSinceStart = false;
       setDirection(null);
     };
-    const dragHandler = () => {
-      
+    const clickHandler = () => {
       setTimeout(() => {
         setShowNavigationInstruction(true);
-      }, 1000);
+        setDisableOrbitControls(false);
+      }, 100);
     }
     window.addEventListener('keydown', keydownHandler);
     window.addEventListener('keyup', keyupHandler);
-    window.addEventListener('drag', dragHandler);
+    window.addEventListener('click', clickHandler);
 
     // camera state handler
     if (activeView === 'topView') {
@@ -182,7 +182,7 @@ export function Camera() {
     return () => {
       window.removeEventListener('keydown', keydownHandler);
       window.removeEventListener('keyup', keyupHandler);
-      window.removeEventListener('drag', dragHandler);
+      window.removeEventListener('click', clickHandler);
     };
   }, [activeView, rotationNeedsReset]);
 
@@ -195,7 +195,10 @@ export function Camera() {
         .easing(TWEEN.Easing.Cubic.Out)
         .onStart(() => setDisableOrbitControls(true))
         .onUpdate(() => camera.lookAt(0, 0, 0))
-        .onComplete(() => setDisableOrbitControls(false))
+        .onComplete(() => {
+          setDisableOrbitControls(false);
+          setActiveView('idle');
+        })
         .start();
     }
   }, [activeProduct]);

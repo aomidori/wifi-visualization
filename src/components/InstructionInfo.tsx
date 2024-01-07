@@ -2,26 +2,35 @@ import { useViewStore } from '#/store/view';
 import { css, keyframes } from '@emotion/css';
 import { useEffect } from 'react';
 
-const blinking = keyframes`
-  0% {
-    opacity: 0.5;
-  }
-  60% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0.5;
-  }
-`;
-
-const fadeOut = keyframes`
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-`;
+const animations = {
+  fadeOut: keyframes`
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  `,
+  fadeIn: keyframes`
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  `,
+  blinking: keyframes`
+    0% {
+      opacity: 0.5;
+    }
+    60% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0.5;
+    }
+  `,
+};
 
 const styles = {
   container: css`
@@ -29,13 +38,8 @@ const styles = {
     bottom: 0;
     right: 0;
     padding: 0 24px 24px 0;
-    width: 340px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    animation: ${blinking} 1.6s linear infinite;
     user-select: none;
+    animation: ${animations.blinking} 1.6s linear infinite;
     p {
       margin: 0;
       font-size: 14px;
@@ -43,6 +47,12 @@ const styles = {
       text-align: center;
       color: #818181;
     }
+  `,
+  navigationInstruction: css`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   `,
   image: css`
     aspect-ratio: auto 16 / 9;
@@ -52,16 +62,29 @@ const styles = {
 };
 
 export function InstructionInfo() {
+  const activeView = useViewStore(state => state.activeView);
   const showNavigationInstruction = useViewStore(state => state.showNavigationInstruction);
 
+  const fadeIn = `${animations.fadeIn} 0.3s ease 0s 1 normal forwards`;
+  const fadeOut = `${animations.fadeOut} 0.3s ease 0s 1 normal forwards`;
+
   return (
-    <div
-      className={styles.container}
-      style={!showNavigationInstruction ? { animation: `${fadeOut} 0.3s ease 0s 1 normal forwards` } : {}}
-    >
-      <img className={styles.image} src="/assets/images/icon_navigation.svg" />
-      <p>use arrow keys to navigate</p>
-      <p>Use the mouse to rotate the camera.</p>
+    <>
+    <div className={styles.container}>
+      <p style={{ animation: showNavigationInstruction ? fadeOut: fadeIn }}>
+        click anywhere on the screen to exit the navigation
+      </p>
     </div>
+    <div className={styles.container}>
+      <div
+        className={styles.navigationInstruction}
+        style={{ animation: showNavigationInstruction ? fadeIn: fadeOut}}
+      >
+        <img className={styles.image} src="/assets/images/icon_navigation.svg" />
+        <p>use arrow keys to navigate</p>
+        <p>Use the mouse to rotate the camera.</p>
+      </div>
+    </div>
+    </>
   );
 }
