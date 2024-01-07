@@ -4,10 +4,12 @@ import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 
 import { useViewStore } from '#/store/view';
+import { useProductsStore } from '#/store/products';
 
 export const cameraPositions = {
   topView: { x: 0, y: 30, z: 0 },
   initial: { x: 0, y: 10, z: 20 },
+  topFrontView: { x: 0, y: 20, z: 15 },
 };
 
 const eyeLevelHeight = 2;
@@ -27,9 +29,12 @@ export function Camera() {
   const setShowNavigationInstruction = useViewStore(state => state.setShowNavigationInstruction);
   const cameraLastState = useViewStore(state => state.cameraLastState);
   const setCameraLastState = useViewStore(state => state.setCameraLastState);
+  const activeProduct = useProductsStore(state => state.activeProduct);
+
   const { camera } = useThree();
 
   const [direction, setDirection] = useState<Direction>(null);
+  const [rotationNeedsReset, setRotationNeedsReset] = useState(false);
 
   useFrame(() => {
     TWEEN.update();
@@ -39,10 +44,12 @@ export function Camera() {
   // switch to eye level view when moving around
   const goToEyeLevelView = (resetRotationOnAxisX?: boolean) => {
     camera.position.y = eyeLevelHeight;
-    if (resetRotationOnAxisX) {
-      camera.rotation.x = 0;
-      camera.setRotationFromAxisAngle(new THREE.Vector3(1, 0, 0), 0);
-    }
+    resetCameraRotationOnAxisX()
+  }
+
+  const resetCameraRotationOnAxisX = () => {
+    camera.rotation.x = 0;
+    camera.setRotationFromAxisAngle(new THREE.Vector3(1, 0, 0), 0);
   }
 
   const updateCamera = () => {
@@ -75,6 +82,14 @@ export function Camera() {
     camera.updateMatrixWorld();
   };
 
+  const saveCameraLastState = () => {
+    setCameraLastState({
+      position: new THREE.Vector3().copy(camera.position),
+      quaternion: new THREE.Quaternion().copy(camera.quaternion),
+      worldQuaternion: new THREE.Quaternion().copy(camera.getWorldQuaternion(new THREE.Quaternion())),
+    });
+  }
+
   useEffect(() => {
     if (!camera) return;
 
@@ -102,13 +117,16 @@ export function Camera() {
         if (event.key === NAVIGATION_KEYS[key]) {
           if (activeView !== 'navigationView') {
             setActiveView('navigationView');
-          } else {
-            setDirection(key);
-            setDisableOrbitControls(true);
-            setTimeout(() => {
-              setShowNavigationInstruction(false);
-            }, 1000);
+            return;
           }
+          if (rotationNeedsReset) {
+            resetCameraRotationOnAxisX();
+          }
+          setDirection(key);
+          setDisableOrbitControls(true);
+          setTimeout(() => {
+            setShowNavigationInstruction(false);
+          }, 1000);
         }
       })
     };
@@ -131,11 +149,7 @@ export function Camera() {
     // camera state handler
     if (activeView === 'topView') {
       // top view
-      setCameraLastState({
-        position: new THREE.Vector3().copy(camera.position),
-        quaternion: new THREE.Quaternion().copy(camera.quaternion),
-        worldQuaternion: new THREE.Quaternion().copy(camera.getWorldQuaternion(new THREE.Quaternion())),
-      });
+      saveCameraLastState(); // save camera state on ground
       new TWEEN.Tween(camera.position)
         .to(cameraPositions.topView, 1200)
         .easing(TWEEN.Easing.Cubic.Out)
@@ -169,6 +183,20 @@ export function Camera() {
       window.removeEventListener('pointerdown', pointerDonwHandler);
     };
   }, [activeView]);
+
+  useEffect(() => {
+    if (activeProduct) {
+      setRotationNeedsReset(true);
+      // top front view
+      new TWEEN.Tween(camera.position)
+        .to(cameraPositions.topFrontView, 1200)
+        .easing(TWEEN.Easing.Cubic.Out)
+        .onStart(() => setDisableOrbitControls(true))
+        .onUpdate(() => camera.lookAt(0, 0, 0))
+        .onComplete(() => setDisableOrbitControls(false))
+        .start();
+    }
+  }, [activeProduct]);
 
   return null;
 }
