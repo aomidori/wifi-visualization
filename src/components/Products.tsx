@@ -56,6 +56,15 @@ const styles = {
     justify-content: center;
     align-items: center;
   `,
+  markerColor: css`
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    opacity: 0.5;
+  `,
 };
 
 export function Products() {
@@ -78,7 +87,13 @@ export function Products() {
           className={cx(styles.product, activeProduct === product.id && 'active')}
           onClick={() => setActiveProduct(product.id)}
         >
-          <div className={styles.badge}>{getProductCount(product.id)}</div>
+          {
+            getProductCount(product.id) > 0 &&
+            <>
+              <div className={styles.badge}>{getProductCount(product.id)}</div>
+              <div className={styles.markerColor} style={{ backgroundColor: product.markerColor }}></div>
+            </>
+          }
           <div
             className={styles.productImage}
             style={{ backgroundImage: `url(${product.imageUrl})`}}
