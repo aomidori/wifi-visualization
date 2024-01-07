@@ -7,7 +7,7 @@ const getMaterials = () => ({
   activeMat: new THREE.MeshStandardMaterial({ color: 0x98CAE2 }),
   inactiveMat: new THREE.MeshStandardMaterial({ color: 0xe3e3e3 }),
   floorMat: new THREE.MeshStandardMaterial({ color: 0xc1c1c1 }),
-  ceilingMat: new THREE.MeshStandardMaterial({ color: 0xe3e3e3, transparent: true, opacity: 0.2 }),
+  ceilingMat: new THREE.MeshStandardMaterial({ color: 0xe3e3e3, transparent: true, opacity: 0.3 }),
   editingMat: new THREE.MeshStandardMaterial({ color: 0x98CAE2 }),
 });
 

@@ -29,6 +29,6 @@ export function TweakPane() {
     }
     settings.setInitialized(true);
   }
-  
+
   return null;
 }

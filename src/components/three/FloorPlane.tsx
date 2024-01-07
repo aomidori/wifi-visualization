@@ -9,6 +9,7 @@ import { AnchorPoint } from './AnchorPoint';
 import { useViewStore } from '#/store/view';
 import { dispose } from '#/utils/helpers';
 import { useMaterials } from './materials/useMaterials';
+import { debounce } from 'lodash';
 
 const FLOOR_PLANE_POSITION: Vector3 = [0, 0, 0];
 const FLOOR_HEIGHT = 3;
@@ -66,6 +67,7 @@ export function FloorPlane() {
 
   const accent = useSettingsStore(state => state.accent);
   const activeView = useViewStore(state => state.activeView);
+  const isMobileView = useViewStore(state => state.isMobileView);
   const activeInstructionName = useViewStore(state => state.activeInstructionName);
   const setActiveInstructionName = useViewStore(state => state.setActiveInstructionName);
   const products = useProductsStore(state => state.products);
@@ -134,13 +136,20 @@ export function FloorPlane() {
     setAnchorPoint(null);
   };
 
-  const pointerDownHandler = (e) => {
+  const onAnchorPointerDown = (e) => {
+    if (activeProductData) {
+      addAnchoredProduct(activeProductData.id, anchorPoint);
+      setActiveProduct(null);
+    }
+  }
+
+  const mobileTapHandler = debounce((e) => {
     const intersectionOnCeiling = e.intersections.find(o => o.object.name.startsWith('CeilingNode'));
     if (activeProductData) {
       addAnchoredProduct(activeProductData.id, intersectionOnCeiling.point);
       setActiveProduct(null);
     }
-  }
+  }, 200);
 
   const activeProductData = getActiveProductData();
 
@@ -152,7 +161,7 @@ export function FloorPlane() {
         scale={[1, 1, 1]}
         onPointerMove={pointerMoveHandler}
         onPointerOut={pointerOutHandler}
-        onPointerDown={pointerDownHandler}
+        onPointerDown={isMobileView ? mobileTapHandler : null}
       />
       {  // hovering active product
         !!activeProductData && (
@@ -172,6 +181,7 @@ export function FloorPlane() {
         !!anchorPoint && !editingProduct && (
           <AnchorPoint
             position={[anchorPoint.x, anchorPoint.y, anchorPoint.z]}
+            onPointerDown={isMobileView ? null : onAnchorPointerDown}
           />
         )
       }

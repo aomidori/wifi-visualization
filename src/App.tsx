@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 
 function App() {
   const setIsMobileView = useViewStore(state => state.setIsMobileView);
+
   useEffect(() => {
     const resizeHandler = () => {
       const mobileCheck = /iPhone|iPad|iPod|Android|Mobile/i.test(navigator.userAgent);
@@ -17,10 +18,11 @@ function App() {
         setIsMobileView(false);
       }
     }
+    resizeHandler();
     window.addEventListener('resize', resizeHandler);
     return () => window.removeEventListener('resize', resizeHandler);
   }, []);
-
+  
   return (
     <>
       <CanvasView />
