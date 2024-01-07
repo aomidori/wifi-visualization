@@ -33,6 +33,9 @@ export function Camera() {
   });
 
   useEffect(() => {
+    if (activeView === 'topView') {
+      return;
+    }
     const keydownHandler = (event: KeyboardEvent) => {
       Object.keys(NAVIGATION_KEYS).forEach((key: Direction) => {
         if (event.key === NAVIGATION_KEYS[key]) {
@@ -54,7 +57,7 @@ export function Camera() {
       window.removeEventListener('keyup', keyupHandler);
       window.removeEventListener('pointerdown', pointerDonwHandler);
     };
-  },[]);
+  },[activeView]);
 
   useEffect(() => {
     if (direction) {

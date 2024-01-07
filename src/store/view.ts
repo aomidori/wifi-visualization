@@ -3,6 +3,7 @@ import { create } from 'zustand';
 interface ViewState {
   activeView: SceneActiveView;
   activeInstructionName: InstructionName;
+  // save camera position when switching between ground/top views
   cameraLastPosition?: THREE.Vector3;
   isOrbitControlsDisabled?: boolean;
   setActiveView: (activeView: SceneActiveView) => void;
