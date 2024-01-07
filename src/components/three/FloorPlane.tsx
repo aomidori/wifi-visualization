@@ -133,7 +133,7 @@ export function FloorPlane() {
 
   const activeProductData = getActiveProductData();
 
-  return gltf.scene ? (
+  return (
     <group ref={groupRef}>
       <primitive
         object={gltf.scene} 
@@ -199,7 +199,7 @@ export function FloorPlane() {
         })
       }
     </group>
-  ) : null;
+  );
 }
 
 // floor plane ground helper grid
