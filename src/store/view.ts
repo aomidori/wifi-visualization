@@ -1,5 +1,11 @@
 import { create } from 'zustand';
 
+interface CameraState {
+  position: THREE.Vector3;
+  quaternion: THREE.Quaternion;
+  worldQuaternion: THREE.Quaternion;
+}
+
 interface ViewState {
   activeView: SceneActiveView;
   // scene navigation instruction;
@@ -7,15 +13,12 @@ interface ViewState {
   // instruction 3D hover text
   activeInstructionName: InstructionName;
   // save camera position when switching between ground/top views
-  cameraLastState?: {
-    position: THREE.Vector3;
-    rotation: THREE.Euler;
-  };
+  cameraLastState?: CameraState
   isOrbitControlsDisabled?: boolean;
   setActiveView: (activeView: SceneActiveView) => void;
   setActiveInstructionName: (name: InstructionName) => void;
   setDisableOrbitControls: (value: boolean) => void;
-  setCameraLastState: (data: { position: THREE.Vector3, rotation: THREE.Euler }) => void;
+  setCameraLastState: (data: CameraState) => void;
   setShowNavigationInstruction: (value: boolean) => void;
 }
 

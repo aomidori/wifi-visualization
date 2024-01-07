@@ -65,6 +65,7 @@ export function FloorPlane() {
   const [ materials, setMaterialColor, resetMaterials ]= useMaterials();
 
   const accent = useSettingsStore(state => state.accent);
+  const activeView = useViewStore(state => state.activeView);
   const activeInstructionName = useViewStore(state => state.activeInstructionName);
   const setActiveInstructionName = useViewStore(state => state.setActiveInstructionName);
   const products = useProductsStore(state => state.products);
@@ -96,13 +97,14 @@ export function FloorPlane() {
 
   useEffect(() => {
     // show the transarent shape of the ceiling when pending to place a product
+    // or when in navigation view
     const ceiling = gltf.scene?.getObjectByName('CeilingNode');
-    if (activeProduct) {
+    if (activeProduct || activeView === 'navigationView') {
       ceiling.visible = true;
     } else {
       ceiling.visible = false;
     }
-  }, [activeProduct]);
+  }, [activeProduct, activeView]);
 
   useFrame(() => {
     setProductFloatHeight(Math.sin(Date.now() * 0.002) * 0.5 + 4);

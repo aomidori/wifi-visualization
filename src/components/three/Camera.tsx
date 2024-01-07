@@ -10,6 +10,8 @@ export const cameraPositions = {
   initial: { x: 0, y: 10, z: 20 },
 };
 
+const eyeLevelHeight = 3;
+
 type Direction = 'up' | 'down' | 'left' | 'right';
 const NAVIGATION_KEYS: Record<Direction, string> = {
   up: 'ArrowUp',
@@ -33,42 +35,13 @@ export function Camera() {
     updateCamera();
   });
 
-  useEffect(() => {
-    // navigation controls only work on ground view
-    if (activeView === 'topView') {
-      return;
-    }
-    const keydownHandler = (event: KeyboardEvent) => {
-      Object.keys(NAVIGATION_KEYS).forEach((key: Direction) => {
-        if (event.key === NAVIGATION_KEYS[key]) {
-          setDirection(key);
-          setDisableOrbitControls(true);
-        }
-        if (activeView !== 'navigationView') {
-          setActiveView('navigationView');
-        }
-      })
-    };
-    const keyupHandler = () => {
-      setDirection(null);
-    };
-    const pointerDonwHandler = () => {
-      setDisableOrbitControls(false);
-    }
-    window.addEventListener('keydown', keydownHandler);
-    window.addEventListener('keyup', keyupHandler);
-    window.addEventListener('pointerdown', pointerDonwHandler);
-    return () => {
-      window.removeEventListener('keydown', keydownHandler);
-      window.removeEventListener('keyup', keyupHandler);
-      window.removeEventListener('pointerdown', pointerDonwHandler);
-    };
-  },[activeView]);
-
   // switch to eye level view when moving around
-  const goToEyeLevelView = () => {
-    const eyeLevelHeight = 3;
+  const goToEyeLevelView = (resetRotationOnAxisX?: boolean) => {
     camera.position.y = eyeLevelHeight;
+    if (resetRotationOnAxisX) {
+      camera.rotation.x = 0;
+      camera.setRotationFromAxisAngle(new THREE.Vector3(1, 0, 0), 0);
+    }
   }
 
   const updateCamera = () => {
@@ -79,15 +52,15 @@ export function Camera() {
     goToEyeLevelView();
     
     const worldQ = camera.getWorldQuaternion(new THREE.Quaternion());
-    const rotationOnWorldAxisY = new THREE.Euler().setFromQuaternion(worldQ, 'YXZ').y;
+    const rotationOnAxisY = new THREE.Euler().setFromQuaternion(worldQ, 'YXZ').y;
     switch (direction) {
       case 'up':
-        camera.position.z -= speed * acceleration * Math.sin(Math.PI / 2 + rotationOnWorldAxisY);
-        camera.position.x += speed * acceleration * Math.cos(Math.PI / 2 + rotationOnWorldAxisY);
+        camera.position.z -= speed * acceleration * Math.sin(Math.PI / 2 + rotationOnAxisY);
+        camera.position.x += speed * acceleration * Math.cos(Math.PI / 2 + rotationOnAxisY);
         break;
       case 'down':
-        camera.position.z += speed * acceleration * Math.sin(Math.PI / 2 + rotationOnWorldAxisY);
-        camera.position.x -= speed * acceleration * Math.cos(Math.PI / 2 + rotationOnWorldAxisY);
+        camera.position.z += speed * acceleration * Math.sin(Math.PI / 2 + rotationOnAxisY);
+        camera.position.x -= speed * acceleration * Math.cos(Math.PI / 2 + rotationOnAxisY);
         break;
       case 'left':
         camera.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), rotationSpeed);
@@ -103,11 +76,37 @@ export function Camera() {
 
   useEffect(() => {
     if (!camera) return;
+
+    // keyboard event listeners;
+    const keydownHandler = (event: KeyboardEvent) => {
+      Object.keys(NAVIGATION_KEYS).forEach((key: Direction) => {
+        if (event.key === NAVIGATION_KEYS[key]) {
+          if (activeView !== 'navigationView') {
+            setActiveView('navigationView');
+          } else {
+            setDirection(key);
+            setDisableOrbitControls(true);
+          }
+        }
+      })
+    };
+    const keyupHandler = () => {
+      setDirection(null);
+    };
+    const pointerDonwHandler = () => {
+      setDisableOrbitControls(false);
+    }
+    window.addEventListener('keydown', keydownHandler);
+    window.addEventListener('keyup', keyupHandler);
+    window.addEventListener('pointerdown', pointerDonwHandler);
+
+    // camera state handler
     if (activeView === 'topView') {
       // top view
       setCameraLastState({
         position: new THREE.Vector3().copy(camera.position),
-        rotation: new THREE.Euler().copy(camera.rotation),
+        quaternion: new THREE.Quaternion().copy(camera.quaternion),
+        worldQuaternion: new THREE.Quaternion().copy(camera.getWorldQuaternion(new THREE.Quaternion())),
       });
       new TWEEN.Tween(camera.position)
         .to(cameraPositions.topView, 1200)
@@ -118,7 +117,7 @@ export function Camera() {
         .start();
     } else if (activeView === 'navigationView') {
       // ground navigation view activated
-      goToEyeLevelView();
+      goToEyeLevelView(true);
       camera.up = new THREE.Vector3(0, 1, 0);
       setDisableOrbitControls(true);
     } else {
@@ -131,21 +130,17 @@ export function Camera() {
         .onComplete(() => setDisableOrbitControls(false))
         .start();
       if (cameraLastState) {
-        new TWEEN.Tween(camera.rotation)
-          .to(cameraLastState.rotation || new THREE.Euler(), 1200)
-          .easing(TWEEN.Easing.Cubic.Out)
-          .onStart(() => setDisableOrbitControls(true))
-          .onComplete(() => setDisableOrbitControls(false))
-          .start();
+        camera.quaternion.copy(cameraLastState.quaternion);
+        camera.setRotationFromQuaternion(cameraLastState.worldQuaternion);
       }
     }
-  }, [activeView]);
 
-  useEffect(() => {
-    if (direction) {
-      setDisableOrbitControls(true);
-    }
-  }, [direction]);
+    return () => {
+      window.removeEventListener('keydown', keydownHandler);
+      window.removeEventListener('keyup', keyupHandler);
+      window.removeEventListener('pointerdown', pointerDonwHandler);
+    };
+  }, [activeView]);
 
   return null;
 }
