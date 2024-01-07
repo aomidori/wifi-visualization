@@ -8,6 +8,7 @@ import { ProductMesh } from './ProductMesh';
 import { AnchorPoint } from './AnchorPoint';
 import { useViewStore } from '#/store/view';
 import { dispose } from '#/utils/helpers';
+import { useMaterials } from './materials/useMaterials';
 
 const FLOOR_PLANE_POSITION: Vector3 = [0, 0, 0];
 const FLOOR_HEIGHT = 3;
@@ -15,14 +16,6 @@ const FLOOR_HEIGHT = 3;
 const INSTRUCTIONS = {
   productPlaceholder: 'choose a product to place on the ceiling\n or edit an existing product',
   editingProduct: 'drag to move\n press x to delete',
-};
-
-const materials = {
-  activeMat: new THREE.MeshStandardMaterial({ color: 0x98CAE2 }),
-  inactiveMat: new THREE.MeshStandardMaterial({ color: 0xe3e3e3 }),
-  warningMat: new THREE.MeshStandardMaterial({ color: 0xff0000 }),
-  floorMat: new THREE.MeshStandardMaterial({ color: 0xc1c1c1 }),
-  ceilingMat: new THREE.MeshStandardMaterial({ color: 0xe3e3e3, transparent: true, opacity: 0.2 }),
 };
 
 const InstructionText = ({
@@ -69,12 +62,13 @@ const InstructionText = ({
 export function FloorPlane() {
   const groupRef = useRef<THREE.Group>();
   const gltf = useGLTF('/assets/models/floor_plan/scan.gltf');
+  const [ materials, setMaterialColor, resetMaterials ]= useMaterials();
+
   const accent = useSettingsStore(state => state.accent);
   const activeInstructionName = useViewStore(state => state.activeInstructionName);
   const setActiveInstructionName = useViewStore(state => state.setActiveInstructionName);
   const products = useProductsStore(state => state.products);
   const activeProduct = useProductsStore(state => state.activeProduct);
-  const hoveringProduct = useProductsStore(state => state.hoveringProduct);
   const editingProduct = useProductsStore(state => state.editingProduct);
   const getActiveProductData = useProductsStore(state => state.getActiveProductData);
   const anchoredProducts = useProductsStore(state => state.anchoredProducts);
@@ -85,30 +79,25 @@ export function FloorPlane() {
 
   useEffect(() => {
     gltf.scene?.traverse((child) => {
+      // hide ceiling by default
       if (child.name === 'CeilingNode') {
         child.visible = false;
       }
-      if (child.name.startsWith('FloorNode') && child instanceof THREE.Mesh) {
+      // assign materials
+      if (child.parent.name === 'CeilingNode' && child instanceof THREE.Mesh) {
+        child.material = materials.ceilingMat;
+      }
+      if (child.parent.name === 'FloorNode' && child instanceof THREE.Mesh) {
         child.material = materials.floorMat;
       }
     });
   }, [gltf]);
 
   useEffect(() => {
-    materials.activeMat.color.set(accent);
-  }, [accent]);
-
-  useEffect(() => {
     // show the transarent shape of the ceiling when pending to place a product
     const ceiling = gltf.scene?.getObjectByName('CeilingNode');
     if (activeProduct) {
       ceiling.visible = true;
-      ceiling.children.forEach((child: THREE.Mesh) => {
-        if (child.material instanceof THREE.MeshStandardMaterial) {
-          child.material = materials.ceilingMat;
-          child.material.needsUpdate = true;
-        }
-      });
     } else {
       ceiling.visible = false;
     }
@@ -119,30 +108,12 @@ export function FloorPlane() {
   });
 
   const pointerMoveHandler = (e) => {
-    const intersection = e.object;
-
-    const highlightGround = () => {
-      gltf.scene.traverse((child) => {
-        if (child instanceof THREE.Mesh && child.name.startsWith('FloorNode')) {
-          child.material = materials.activeMat;
-        }
-      });
-    };
-    // reset materials of inactive meshes
-    gltf.scene.traverse((child) => {
-      if (
-        child instanceof THREE.Mesh &&
-        child.name !== intersection.name &&
-        !child.name.startsWith('CeilingNode')) {
-        child.material = child.name.startsWith('FloorNode') ?
-          materials.floorMat : materials.inactiveMat;
-      }
-    });
+    resetMaterials();
     // find ceiling intersection
     const intersectionOnCeiling = e.intersections.find(o => o.object.name.startsWith('CeilingNode'));
     if (intersectionOnCeiling) {
       setAnchorPoint(intersectionOnCeiling.point);
-      highlightGround();
+      setMaterialColor('floorMat', accent);
       // drag product if it's in editing mode
       if (editingProduct) {
         groupRef.current?.traverse((child) => {
@@ -155,14 +126,9 @@ export function FloorPlane() {
     }
   };
 
-  const resetMaterials = () => {
-    gltf.scene.traverse((child) => {
-      if (child instanceof THREE.Mesh) {
-        child.material = child.name.startsWith('FloorNode')
-          ? materials.floorMat : child.name.startsWith('CeilingNode')
-            ? materials.ceilingMat: materials.inactiveMat;
-      }
-    });
+  const pointerOutHandler = () => {
+    resetMaterials();
+    setAnchorPoint(null);
   };
 
   const activeProductData = getActiveProductData();
@@ -174,7 +140,7 @@ export function FloorPlane() {
         position={FLOOR_PLANE_POSITION}
         scale={[1, 1, 1]}
         onPointerMove={pointerMoveHandler}
-        onPointerOut={resetMaterials}
+        onPointerOut={pointerOutHandler}
       />
       {  // hovering active product
         !!activeProductData && (

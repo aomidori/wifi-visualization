@@ -14,7 +14,7 @@ interface ProductsStoreState {
   activeProduct?: string;
   // products that are already installed on the ceiling
   anchoredProducts?: AnchordProduct[];
-  // hovered ceiling product
+  // hovered product on the ceiling
   hoveringProduct?: { id: string; meshId: string };
   // selected product that's already installed on the ceiling
   editingProduct?: { id: string; meshId: string };
