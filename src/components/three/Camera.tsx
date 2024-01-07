@@ -79,11 +79,6 @@ export function Camera() {
     
     const worldQ = camera.getWorldQuaternion(new THREE.Quaternion());
     const rotationOnWorldAxisY = new THREE.Euler().setFromQuaternion(worldQ, 'YXZ').y;
-    console.log('x', rotationOnWorldAxisY,
-    'sin(x)', Math.sin(Math.PI / 2 + rotationOnWorldAxisY),
-    'cos(x)', Math.cos(Math.PI / 2 + rotationOnWorldAxisY),
-    );
-
     switch (direction) {
       case 'up':
         camera.position.z -= speed * acceleration * Math.sin(Math.PI / 2 + rotationOnWorldAxisY);
