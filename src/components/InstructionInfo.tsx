@@ -78,21 +78,21 @@ export function InstructionInfo() {
 
   return (
     <>
-    <div className={styles.container}>
-      <p style={{ animation: showNavigationInstruction ? fadeOut: fadeIn }}>
-        click anywhere on the screen to exit the navigation
-      </p>
-    </div>
-    <div className={styles.container}>
-      <div
-        className={styles.navigationInstruction}
-        style={{ animation: showNavigationInstruction ? fadeIn: fadeOut}}
-      >
-        <img className={styles.image} src="/assets/images/icon_navigation.svg" />
-        <p>use arrow keys to navigate</p>
-        <p>Use the mouse to rotate the camera.</p>
+      <div className={styles.container}>
+        <p style={{ animation: showNavigationInstruction ? fadeOut: fadeIn }}>
+          click anywhere on the screen to exit the navigation
+        </p>
       </div>
-    </div>
+      <div className={styles.container}>
+        <div
+          className={styles.navigationInstruction}
+          style={{ animation: showNavigationInstruction ? fadeIn: fadeOut}}
+        >
+          <img className={styles.image} src="/assets/images/icon_navigation.svg" />
+          <p>use arrow keys to navigate</p>
+          <p>Use the mouse to rotate the camera.</p>
+        </div>
+      </div>
     </>
   );
 }

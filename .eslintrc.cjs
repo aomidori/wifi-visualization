@@ -13,9 +13,7 @@ module.exports = {
   rules: {
     'no-unused-vars': 'off',
     'quotes': [2, 'single'],
-    'indent': [2, 2, {
-      switchCase: 1,
-    }],
+    'indent': [2, 2],
     '@typescript-eslint/no-unused-vars': ['off'],
     'semi': ['error', 'always'],
     'react-refresh/only-export-components': [

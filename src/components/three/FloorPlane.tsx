@@ -141,7 +141,7 @@ export function FloorPlane() {
       addAnchoredProduct(activeProductData.id, anchorPoint);
       setActiveProduct(null);
     }
-  }
+  };
 
   const mobileTapHandler = debounce((e) => {
     const intersectionOnCeiling = e.intersections.find(o => o.object.name.startsWith('CeilingNode'));

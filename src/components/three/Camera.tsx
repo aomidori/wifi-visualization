@@ -20,7 +20,7 @@ const NAVIGATION_KEYS: Record<Direction, string> = {
   down: 'ArrowDown',
   left: 'ArrowLeft',
   right: 'ArrowRight',
-}
+};
 
 export function Camera() {
   const activeView = useViewStore(state => state.activeView);
@@ -44,13 +44,13 @@ export function Camera() {
   // switch to eye level view when moving around
   const goToEyeLevelView = () => {
     camera.position.y = eyeLevelHeight;
-  }
+  };
 
   const resetCameraRotationOnAxisX = () => {
     camera.rotation.x = 0;
     camera.setRotationFromAxisAngle(new THREE.Vector3(1, 0, 0), 0);
     camera.updateMatrixWorld();
-  }
+  };
 
   const updateCamera = () => {
     if (!direction || activeView !== 'navigationView') return;
@@ -62,22 +62,22 @@ export function Camera() {
     const worldQ = camera.getWorldQuaternion(new THREE.Quaternion());
     const rotationOnAxisY = new THREE.Euler().setFromQuaternion(worldQ, 'YXZ').y;
     switch (direction) {
-      case 'up':
-        camera.position.z -= speed * acceleration * Math.sin(Math.PI / 2 + rotationOnAxisY);
-        camera.position.x += speed * acceleration * Math.cos(Math.PI / 2 + rotationOnAxisY);
-        break;
-      case 'down':
-        camera.position.z += speed * acceleration * Math.sin(Math.PI / 2 + rotationOnAxisY);
-        camera.position.x -= speed * acceleration * Math.cos(Math.PI / 2 + rotationOnAxisY);
-        break;
-      case 'left':
-        camera.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), rotationSpeed);
-        break;
-      case 'right':
-        camera.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -rotationSpeed);
-        break;
-      default:
-        break;
+    case 'up':
+      camera.position.z -= speed * acceleration * Math.sin(Math.PI / 2 + rotationOnAxisY);
+      camera.position.x += speed * acceleration * Math.cos(Math.PI / 2 + rotationOnAxisY);
+      break;
+    case 'down':
+      camera.position.z += speed * acceleration * Math.sin(Math.PI / 2 + rotationOnAxisY);
+      camera.position.x -= speed * acceleration * Math.cos(Math.PI / 2 + rotationOnAxisY);
+      break;
+    case 'left':
+      camera.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), rotationSpeed);
+      break;
+    case 'right':
+      camera.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -rotationSpeed);
+      break;
+    default:
+      break;
     }
     camera.updateMatrixWorld();
   };
@@ -88,7 +88,7 @@ export function Camera() {
       quaternion: new THREE.Quaternion().copy(camera.quaternion),
       worldQuaternion: new THREE.Quaternion().copy(camera.getWorldQuaternion(new THREE.Quaternion())),
     });
-  }
+  };
 
   useEffect(() => {
     if (!camera) return;
@@ -101,7 +101,7 @@ export function Camera() {
     const recordKeydownSinceStart = () => {
       keydownSinceStart = Date.now() - keydownStart;
       requestAnimationFrame(recordKeydownSinceStart);
-    }
+    };
 
     const keydownHandler = (event: KeyboardEvent) => {
       recordKeydownSinceStart();
@@ -129,7 +129,7 @@ export function Camera() {
             setShowNavigationInstruction(false);
           }, 1000);
         }
-      })
+      });
     };
     const keyupHandler = () => {
       keydownStart = 0;
@@ -142,7 +142,7 @@ export function Camera() {
         setShowNavigationInstruction(true);
         setDisableOrbitControls(false);
       }, 100);
-    }
+    };
     window.addEventListener('keydown', keydownHandler);
     window.addEventListener('keyup', keyupHandler);
     window.addEventListener('click', clickHandler);
