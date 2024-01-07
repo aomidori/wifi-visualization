@@ -1,31 +1,25 @@
-import { checkStatus } from '#/utils/checkStatus';
 import { useEffect, useRef, useState } from 'react';
-import { USDZLoader } from 'three-usdz-loader';
 import * as THREE from 'three';
+
 import { useProductsStore } from '#/store/products';
 import { useViewStore } from '#/store/view';
 import { useSettingsStore } from '#/store/settings';
 import { dispose } from '#/utils/helpers';
-import { is } from '@react-three/fiber/dist/declarations/src/core/utils';
 
-// cached blobs
-const cached = {};
+import { useUSDZ } from './loaders/useUSDZ';
 
-const loadUSDZ = async (url: string, name: string, group): Promise<void> => {
-  try {
-    let blob: Blob;
-    if (cached[name]) {
-      blob = cached[name];
-    } else {
-      const response = await fetch(url).then(checkStatus);
-      blob = await response.blob();
-    }
-    const loader = new USDZLoader();
-    await loader.loadFile(new File([blob], `${name}.usdz`), group);
-  } catch (error) {
-    console.error('Failed to load USDZ', error);
-  }
-};
+interface Props {
+  productModelUrl: string,
+  productId?: string,
+  color?: string,
+  index?: number,
+  anchored?: boolean,
+  scale?: [number, number, number],
+  position?: [number, number, number],
+  rotation?: [number, number, number],
+  onHover?: () => void,
+  onBlur?: () => void,
+}
 
 export function ProductMesh({
   productModelUrl,
@@ -38,19 +32,9 @@ export function ProductMesh({
   rotation = [0, 0, 0],
   onHover,
   onBlur,
-}: {
-  productModelUrl: string,
-  productId?: string,
-  color?: string,
-  index?: number,
-  anchored?: boolean,
-  scale?: [number, number, number],
-  position?: [number, number, number],
-  rotation?: [number, number, number],
-  onHover?: () => void,
-  onBlur?: () => void,
-}) {
+}: Props) {
   const groupRef = useRef<THREE.Group>();
+  const [loaded, usdz] = useUSDZ(productModelUrl, productId);
 
   const editingColor = useSettingsStore(state => state.editing);
   const editingProduct = useProductsStore(state => state.editingProduct);
@@ -73,22 +57,12 @@ export function ProductMesh({
   }, []);
 
   useEffect(() => {
-    if (productModelUrl) {
-      const meshGroup = groupRef.current;
-      loadUSDZ(productModelUrl, productId, meshGroup).then(() => {
-        meshGroup.name = productId;
-        setMeshColor(color);
-      });
-    }
-  }, [productModelUrl]);
-
-  useEffect(() => {
     if (editingProduct?.id === productId && editingProduct?.meshId === groupRef.current?.uuid) {
       setMeshColor(editingColor);
     } else {
       setMeshColor(color);
     }
-  }, [color, editingProduct]);
+  }, [loaded, color, editingProduct]);
 
   useEffect(() => {
     const keydownHandler = (e) => {
@@ -159,8 +133,9 @@ export function ProductMesh({
   };
   
   return (
-    <group
+    <primitive
       ref={groupRef}
+      object={usdz}
       scale={scale}
       position={position}
       rotation={rotation}
