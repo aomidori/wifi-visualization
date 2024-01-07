@@ -1,30 +1,33 @@
-# React + TypeScript + Vite
+# Ubiquiti Homework
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The project for "Ubiquiti 3D Fullstack Web Developer Test Assignment".
 
-Currently, two official plugins are available:
+Key features are:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- interactive floorplane
+- select and install products on the ceiling
+- drag selected product and re-locate it on the ceiling
+- hover and press 'x' to delete a product
+- navigation mode to 'walk' in the scene
+- quick view toggle to switch between top view and ground view
+- customizable view - allow setting accent color and product editing color
 
-## Expanding the ESLint configuration
+## To Run Locally
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+What's required
+- Make sure the local node env is  `node >= v18`.
+- Make sure your browser supports [SharedArrayBuffer](https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer) as well as [Atomics](https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Global_Objects/Atomics). It's needed for loading the `.usdz` files
 
-- Configure the top-level `parserOptions` property like this:
+To start dev just run
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+```bash
+# if you use yarn
+yarn install
+yarn dev
+
+# or
+npm install
+npm run dev
 ```
+Then go to http://localhost:5173/
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
