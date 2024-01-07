@@ -137,15 +137,15 @@ export function Camera() {
       recordingKeydownSinceStart = false;
       setDirection(null);
     };
-    const pointerDonwHandler = () => {
-      setDisableOrbitControls(false);
+    const dragHandler = () => {
+      
       setTimeout(() => {
         setShowNavigationInstruction(true);
       }, 1000);
     }
     window.addEventListener('keydown', keydownHandler);
     window.addEventListener('keyup', keyupHandler);
-    window.addEventListener('pointerdown', pointerDonwHandler);
+    window.addEventListener('drag', dragHandler);
 
     // camera state handler
     if (activeView === 'topView') {
@@ -182,7 +182,7 @@ export function Camera() {
     return () => {
       window.removeEventListener('keydown', keydownHandler);
       window.removeEventListener('keyup', keyupHandler);
-      window.removeEventListener('pointerdown', pointerDonwHandler);
+      window.removeEventListener('drag', dragHandler);
     };
   }, [activeView, rotationNeedsReset]);
 
