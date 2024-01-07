@@ -1,11 +1,13 @@
 import { Canvas, useThree } from '@react-three/fiber';
 import { OrbitControls, Stats } from '@react-three/drei';
 import { css } from '@emotion/css';
+import { useEffect } from 'react';
 
 import { Lightings } from '#/components/three/Lightings';
 import { FloorPlane, FloorPlaneBaseGrid } from '#/components/three/FloorPlane';
 import { Camera } from './Camera';
 import { useViewStore } from '#/store/view';
+import { useSettingsStore } from '#/store/settings';
 
 const styles = {
   canvasContainer: css`
@@ -19,6 +21,17 @@ const styles = {
 
 function Scene() {
   const isOrbitControlsDisabled = useViewStore(state => state.isOrbitControlsDisabled);
+  const { gl } = useThree();
+
+  useEffect(() => {
+    const resizeHandler = () => {
+      gl.setSize(window.innerWidth, window.innerHeight);
+      gl.setPixelRatio(window.devicePixelRatio);
+    };
+    window.addEventListener('resize', resizeHandler);
+    return () => window.removeEventListener('resize', resizeHandler);
+  }, []);
+
   return (
     <>
       <Lightings />
