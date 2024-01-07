@@ -14,7 +14,7 @@ const FLOOR_PLANE_POSITION: Vector3 = [0, 0, 0];
 const FLOOR_HEIGHT = 3;
 
 const INSTRUCTIONS = {
-  productPlaceholder: 'choose a product to place on the ceiling\n or edit an existing product',
+  productPlaceholder: 'choose a product to place on the ceiling',
   editingProduct: 'drag to move\n press x to delete',
 };
 
@@ -48,7 +48,7 @@ const InstructionText = ({
             key={index}
             scale={[textSize, textSize, textSize]}
             color="#818181"
-            position={[0, - index * 1.0, 0]}
+            position={[0, (lines.length - 1 - index) * 1.0, 0]}
           >
             {line}
           </Text>
