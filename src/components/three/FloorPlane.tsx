@@ -15,7 +15,7 @@ const FLOOR_HEIGHT = 3;
 
 const INSTRUCTIONS = {
   productPlaceholder: 'choose a product to place on the ceiling',
-  editingProduct: 'drag to move\n press x to delete',
+  editingProduct: 'drag to move\n hover and press x to delete',
 };
 
 const InstructionText = ({
