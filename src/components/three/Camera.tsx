@@ -10,7 +10,7 @@ export const cameraPositions = {
   initial: { x: 0, y: 10, z: 20 },
 };
 
-const eyeLevelHeight = 3;
+const eyeLevelHeight = 2;
 
 type Direction = 'up' | 'down' | 'left' | 'right';
 const NAVIGATION_KEYS: Record<Direction, string> = {
@@ -78,8 +78,26 @@ export function Camera() {
     if (!camera) return;
 
     // keyboard event listeners;
+    let keydownStart = 0;
+    let keydownSinceStart = 0;
+    let recordingKeydownSinceStart = false;
+
+    const recordKeydownSinceStart = () => {
+      keydownSinceStart = Date.now() - keydownStart;
+      requestAnimationFrame(recordKeydownSinceStart);
+    }
+
     const keydownHandler = (event: KeyboardEvent) => {
+      recordKeydownSinceStart();
       Object.keys(NAVIGATION_KEYS).forEach((key: Direction) => {
+        if (!keydownStart) {
+          keydownStart = Date.now();
+        }
+        if (!recordingKeydownSinceStart) {
+          recordKeydownSinceStart();
+        }
+        // prevent too short keydown
+        if (keydownSinceStart < 10) return;
         if (event.key === NAVIGATION_KEYS[key]) {
           if (activeView !== 'navigationView') {
             setActiveView('navigationView');
@@ -91,6 +109,9 @@ export function Camera() {
       })
     };
     const keyupHandler = () => {
+      keydownStart = 0;
+      keydownSinceStart = 0;
+      recordingKeydownSinceStart = false;
       setDirection(null);
     };
     const pointerDonwHandler = () => {
