@@ -69,6 +69,7 @@ export function FloorPlane() {
   const setActiveInstructionName = useViewStore(state => state.setActiveInstructionName);
   const products = useProductsStore(state => state.products);
   const activeProduct = useProductsStore(state => state.activeProduct);
+  const setActiveProduct = useProductsStore(state => state.setActiveProduct);
   const editingProduct = useProductsStore(state => state.editingProduct);
   const getActiveProductData = useProductsStore(state => state.getActiveProductData);
   const anchoredProducts = useProductsStore(state => state.anchoredProducts);
@@ -162,7 +163,7 @@ export function FloorPlane() {
             onPointerDown={() => {
               if (activeProductData) {
                 addAnchoredProduct(activeProductData.id, anchorPoint);
-                useProductsStore.getState().setActiveProduct(null);
+                setActiveProduct(null);
               }
             }}
           />
