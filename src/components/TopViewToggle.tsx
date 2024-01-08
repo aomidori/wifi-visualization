@@ -1,6 +1,8 @@
-import { useViewStore } from '#/store/view';
 import { css } from '@emotion/css';
+
 import { ToggleButtons } from './elements/ToggleButtons';
+
+import { useViewStore } from '#/store/view';
 
 const VIEW_TOGGLE_OPTIONS: { label: string, value: SceneActiveView}[] = [
   { label: 'ground', value: 'idle' },

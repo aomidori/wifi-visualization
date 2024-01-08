@@ -1,5 +1,6 @@
-import { useProductsStore } from '#/store/products';
 import { css, cx } from '@emotion/css';
+
+import { useProductsStore } from '#/store/products';
 
 const styles = {
   container: css`

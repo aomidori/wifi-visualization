@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
+
 import { useSettingsStore } from '#/store/settings';
 import { useProductsStore } from '#/store/products';
 

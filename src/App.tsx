@@ -1,11 +1,13 @@
+import { useEffect } from 'react';
+
+import { useViewStore } from './store/view';
+import { VisualizeToggle } from './components/VisualizeToggle';
+
 import { InstructionInfo } from '#/components/InstructionInfo';
 import { TweakPane } from '#/components/TweakPane';
 import { TopViewToggle } from '#/components/TopViewToggle';
 import { CanvasView } from '#/components/three/CanvasView';
 import { Products } from '#/components/Products';
-import { useViewStore } from './store/view';
-import { useEffect } from 'react';
-import { VisualizeToggle } from './components/VisualizeToggle';
 
 function App() {
   const setIsMobileView = useViewStore(state => state.setIsMobileView);

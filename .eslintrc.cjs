@@ -40,9 +40,6 @@ module.exports = {
       allowSeparatedGroups: true,
       memberSyntaxSortOrder: ['none', 'all', 'multiple', 'single'],
     }],
-    'import/order': ['error', {
-      'groups': ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
-    }],
     'react/jsx-indent': [2, 2],
     'react/jsx-indent-props': [2, 2],
     'react/no-unknown-property': 'off',

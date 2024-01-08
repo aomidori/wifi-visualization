@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
+import { useFrame } from '@react-three/fiber';
+
+import { useUSDZ } from './loaders/useUSDZ';
 
 import { useProductsStore } from '#/store/products';
 import { useViewStore } from '#/store/view';
 import { useSettingsStore } from '#/store/settings';
 import { dispose } from '#/utils/helpers';
 
-import { useUSDZ } from './loaders/useUSDZ';
-import { useFrame } from '@react-three/fiber';
 
 interface Props {
   productModelUrl: string;

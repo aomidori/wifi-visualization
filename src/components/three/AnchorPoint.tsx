@@ -1,6 +1,7 @@
-import { useSettingsStore } from '#/store/settings';
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
+
+import { useSettingsStore } from '#/store/settings';
 
 interface Props {
   position: [number, number, number];

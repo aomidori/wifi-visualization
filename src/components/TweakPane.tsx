@@ -1,7 +1,8 @@
-import { useSettingsStore } from '#/store/settings';
-import { useViewStore } from '#/store/view';
 import { useEffect } from 'react';
 import { Pane } from 'tweakpane';
+
+import { useSettingsStore } from '#/store/settings';
+import { useViewStore } from '#/store/view';
 
 const pane = new Pane();
 

@@ -1,15 +1,17 @@
-import { useProductsStore } from '#/store/products';
-import { useSettingsStore } from '#/store/settings';
 import { Text, useGLTF } from '@react-three/drei';
 import { Vector3, useFrame, useThree } from '@react-three/fiber';
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
+import { debounce } from 'lodash';
+
 import { ProductMesh } from './ProductMesh';
 import { AnchorPoint } from './AnchorPoint';
+import { useMaterials } from './materials/useMaterials';
+
 import { useViewStore } from '#/store/view';
 import { dispose, lightenHexColor } from '#/utils/helpers';
-import { useMaterials } from './materials/useMaterials';
-import { debounce } from 'lodash';
+import { useSettingsStore } from '#/store/settings';
+import { useProductsStore } from '#/store/products';
 
 const FLOOR_PLANE_POSITION: Vector3 = [0, 0, 0];
 const FLOOR_HEIGHT = 3;

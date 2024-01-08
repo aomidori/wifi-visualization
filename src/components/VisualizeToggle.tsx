@@ -1,6 +1,8 @@
-import { ToggleButtons } from './elements/ToggleButtons';
-import { useViewStore } from '#/store/view';
 import { css } from '@emotion/css';
+
+import { ToggleButtons } from './elements/ToggleButtons';
+
+import { useViewStore } from '#/store/view';
 import { useProductsStore } from '#/store/products';
 
 const styles = {

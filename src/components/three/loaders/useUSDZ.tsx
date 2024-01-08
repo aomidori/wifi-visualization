@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { USDZLoader } from 'three-usdz-loader';
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/Addons.js';
+import { USDZInstance } from 'three-usdz-loader/lib/USDZInstance';
 
 import { checkStatus } from '#/utils/checkStatus';
 import { useViewStore } from '#/store/view';
-import { GLTFLoader } from 'three/examples/jsm/Addons.js';
-import { USDZInstance } from 'three-usdz-loader/lib/USDZInstance';
 
 // cached models
 const cached = {};
