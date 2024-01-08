@@ -49,6 +49,9 @@ export function GroundVisualization() {
     <group name="ground" visible={anchoredProducts.length && showVisualization}>
       {
         anchoredProducts?.map((product, index) => {
+          if (product.removed) {
+            return null;
+          }
           const productData = products.find(p => p.id === product.productId);
           const geoSize = productData.wifiRangeRadius * 2;
           const yOffset = - 0.01 * index; // avoid overlapping glitches

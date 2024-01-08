@@ -8,6 +8,7 @@ import { useProductsStore } from '#/store/products';
 import { useViewStore } from '#/store/view';
 import { useSettingsStore } from '#/store/settings';
 import { dispose } from '#/utils/helpers';
+import { debounce } from 'lodash';
 
 
 interface Props {
@@ -46,12 +47,9 @@ export function ProductMesh({
   const hoveringProduct = useProductsStore(state => state.hoveringProduct);
   const setEditingProduct = useProductsStore(state => state.setEditingProduct);
   const setHoveringProduct = useProductsStore(state => state.setHoveringProduct);
-  const removeAnchoredProduct = useProductsStore(state => state.removeAnchoredProduct);
   const updateAnchoredProduct = useProductsStore(state => state.updateAnchoredProduct);
   const setDisableOrbitControls = useViewStore(state => state.setDisableOrbitControls);
   const setShowVisualization = useViewStore(state => state.setShowVisualization);
-
-  const hovering = hoveringProduct?.meshId === groupRef.current?.userData.meshId;
 
   useFrame(() => {
     if (autoRotate && groupRef.current) {
@@ -61,9 +59,7 @@ export function ProductMesh({
 
   useEffect(() => {
     return () => {
-      // dispose product if removed from the scene
       if (groupRef.current) {
-        groupRef.current.parent?.remove(groupRef.current);
         dispose(groupRef.current);
       }
     };
@@ -73,6 +69,7 @@ export function ProductMesh({
     if (!loaded) {
       return;
     }
+    updateAnchoredProduct(index, { meshId: groupRef.current.userData.meshId });
     groupRef.current?.children.forEach((child: THREE.Mesh) => {
       if (child.isMesh) {
         (child.material as THREE.Material).dispose();
@@ -85,7 +82,6 @@ export function ProductMesh({
     if (!loaded) {
       return;
     }
-    updateAnchoredProduct(index, { meshId: groupRef.current.userData.meshId });
     if (editingProduct?.id === productId && editingProduct?.meshId === groupRef.current?.userData.meshId) {
       setMeshColor(editingColor);
     } else {
@@ -96,9 +92,15 @@ export function ProductMesh({
   }, [loaded, color, editingProduct]);
 
   useEffect(() => {
+    const hovering = hoveringProduct?.meshId === groupRef.current?.userData.meshId;
+    const removeCurrentProduct = () => {
+      groupRef.current.parent?.remove(groupRef.current);
+      dispose(groupRef.current);
+      updateAnchoredProduct(index, { removed: true });
+    };
     const keydownHandler = (e) => {
       if (e.key.toLowerCase() === 'x' && hovering) {
-        removeAnchoredProduct(index);
+        removeCurrentProduct();
         setEditingProduct(null);
         setHoveringProduct(null);
         setDisableOrbitControls(false);
@@ -113,7 +115,7 @@ export function ProductMesh({
     return () => {
       window.removeEventListener('keydown', keydownHandler);
     };
-  }, [hovering]);
+  }, [hoveringProduct]);
 
   const setMeshColor = (color: string) => {
     if (!color) {
@@ -146,7 +148,7 @@ export function ProductMesh({
     updateAnchoredProduct(index, { position: groupRef.current.position });
   };
 
-  const pointerEnterHandler = (e) => {
+  const pointerEnterHandler = debounce((e) => {
     if (!anchored) {
       return;
     }
@@ -154,7 +156,7 @@ export function ProductMesh({
       onHover();
     }
     setHoveringProduct({id: productId, meshId: groupRef.current.userData.meshId});
-  };
+  }, 50);
 
   const pointerLeaveHandler = (e) => {
     if (!anchored) {

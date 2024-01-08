@@ -8,6 +8,7 @@ type AnchoredProduct = {
   productId: string;
   position: THREE.Vector3;
   meshId?: string;
+  removed?: boolean;
 };
 
 interface ProductsStoreState {
@@ -23,7 +24,6 @@ interface ProductsStoreState {
   getActiveProductData?: () => ProductData;
   setActiveProduct: (id: string) => void;
   addAnchoredProduct: (productId: string, position: THREE.Vector3) => void;
-  removeAnchoredProduct: (index: number) => void;
   updateAnchoredProduct: (index: number, data: Partial<AnchoredProduct>) => void;
   setEditingProduct: (data: {id: string, meshId}) => void;
   setHoveringProduct: (data: {id: string, meshId}) => void;
@@ -37,14 +37,10 @@ export const useProductsStore = create<ProductsStoreState>()((set, get) => ({
   getActiveProductData: () => get().products.find(product => product.id === get().activeProduct),
   setActiveProduct: (id) => set({ activeProduct: id }),
   addAnchoredProduct: (productId, position) => set({ anchoredProducts: [...get().anchoredProducts, {productId, position}] }),
-  removeAnchoredProduct: (index) => set(
-    { anchoredProducts: get().anchoredProducts.filter((_, i) => i !== index) }),
   setEditingProduct: (data) => set({ editingProduct: data }),
   setHoveringProduct: (data) => set({ hoveringProduct: data }),
-  updateAnchoredProduct: (index, data) => set(state => {
-    const anchoredProducts = [...state.anchoredProducts];
-    anchoredProducts[index] = { ...anchoredProducts[index], ...data };
-    return { anchoredProducts };
+  updateAnchoredProduct: (index, data) => set({
+    anchoredProducts: get().anchoredProducts.map((p, i) => i === index ? { ...p, ...data } : p),
   }),
   preloadProductModels: () => {
     const { products } = get();

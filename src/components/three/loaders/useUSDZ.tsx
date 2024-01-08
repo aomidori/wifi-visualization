@@ -32,7 +32,7 @@ export const loadUSDZ = async (url: string, name: string, group: THREE.Group): P
 };
 
 const assignUniqueMeshId = (group: THREE.Group) => {
-  group.userData.meshId = `${group.uuid}_${String(new Date().getTime())}`;
+  group.userData.meshId = `${group.uuid}-${String(new Date().getTime())}`;
 };
 
 export const useUSDZ = (url: string, name: string): [boolean, THREE.Group] => {

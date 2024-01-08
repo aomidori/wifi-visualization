@@ -206,8 +206,9 @@ export function FloorPlane() {
       }
       {
         // anchored products
-        anchoredProducts?.map(({productId, position}, index) => {
+        anchoredProducts?.map(({productId, position, removed}, index) => {
           const product = products.find(p => p.id === productId);
+          if (removed) return null;
           return product && (
             <ProductMesh
               key={index}

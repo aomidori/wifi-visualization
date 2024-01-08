@@ -84,7 +84,7 @@ export function Products() {
   if (!products) return null;
 
   const getProductCount = (productId: string): number => {
-    return anchoredProducts?.filter(p => p.productId === productId).length || 0;
+    return anchoredProducts?.filter(p => !p.removed && p.productId === productId).length || 0;
   };
 
   return (
