@@ -24,11 +24,12 @@ const styles = {
 
 export function VisualizeToggle() {
   const showVisualization = useViewStore(state => state.showVisualization);
+  const isMobileView = useViewStore(state => state.isMobileView);
   const setShowVisualization = useViewStore(state => state.setShowVisualization);
 
   const anchoredProducts = useProductsStore(state => state.anchoredProducts);
 
-  if (!anchoredProducts.length) return null;
+  if (!anchoredProducts.length || isMobileView) return null;
   
   return (
     <div className={styles.container}>
