@@ -37,6 +37,7 @@ export function ProductMesh({
   onBlur,
 }: Props) {
   const groupRef = useRef<THREE.Group>();
+  const matRef = useRef<THREE.MeshBasicMaterial>(new THREE.MeshBasicMaterial());
   const [loaded, usdz] = useUSDZ(productModelUrl, productId);
 
   const editingColor = useSettingsStore(state => state.editing);
@@ -47,10 +48,10 @@ export function ProductMesh({
   const removeAnchoredProduct = useProductsStore(state => state.removeAnchoredProduct);
   const setDisableOrbitControls = useViewStore(state => state.setDisableOrbitControls);
 
-  const hovering = hoveringProduct?.meshId === groupRef.current?.uuid;
+  const hovering = hoveringProduct?.meshId === groupRef.current?.userData.meshId;
 
   useFrame(() => {
-    if (autoRotate) {
+    if (autoRotate && groupRef.current) {
       groupRef.current.rotation.y += 0.02;
     }
   });
@@ -66,7 +67,21 @@ export function ProductMesh({
   }, []);
 
   useEffect(() => {
-    if (editingProduct?.id === productId && editingProduct?.meshId === groupRef.current?.uuid) {
+    if (!loaded) {
+      return;
+    }
+    groupRef.current?.children.forEach((child: THREE.Mesh) => {
+      if (child.isMesh) {
+        child.material = matRef.current;
+      }
+    });
+  }, [loaded]);
+
+  useEffect(() => {
+    if (!loaded) {
+      return;
+    }
+    if (editingProduct?.id === productId && editingProduct?.meshId === groupRef.current?.userData.meshId) {
       setMeshColor(editingColor);
     } else {
       setMeshColor(color);
@@ -107,8 +122,8 @@ export function ProductMesh({
     if (!anchored) {
       return;
     }
-    if (editingProduct?.id !== productId && editingProduct?.meshId !== groupRef.current.uuid) {
-      setEditingProduct({ id: productId, meshId: groupRef.current.uuid });
+    if (editingProduct?.id !== productId && editingProduct?.meshId !== groupRef.current.userData.meshId) {
+      setEditingProduct({ id: productId, meshId: groupRef.current.userData.meshId });
       setDisableOrbitControls(true);
     }
   };
@@ -128,7 +143,7 @@ export function ProductMesh({
     if (onHover) {
       onHover();
     }
-    setHoveringProduct({id: productId, meshId: groupRef.current.uuid});
+    setHoveringProduct({id: productId, meshId: groupRef.current.userData.meshId});
   };
 
   const pointerLeaveHandler = (e) => {
@@ -138,8 +153,12 @@ export function ProductMesh({
     if (onBlur) {
       onBlur();
     }
-    setHoveringProduct({id: productId, meshId: groupRef.current.uuid});
+    setHoveringProduct({id: productId, meshId: groupRef.current.userData.meshId});
   };
+
+  if (!loaded) {
+    return null;
+  }
   
   return (
     <primitive

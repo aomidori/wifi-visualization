@@ -122,7 +122,7 @@ export function FloorPlane() {
       // drag product if it's in editing mode
       if (editingProduct) {
         groupRef.current?.traverse((child) => {
-          if (child.name === editingProduct.id && child.uuid === editingProduct.meshId) {
+          if (child.userData.meshId === editingProduct.meshId) {
             const point = intersectionOnCeiling.point;
             child.position.set(point.x, point.y, point.z);
           }
