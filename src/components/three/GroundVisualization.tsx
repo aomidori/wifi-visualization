@@ -31,9 +31,9 @@ const fragmentShader = `
       gl_FragColor = vec4(color, opacity);
     } else if (d > u_range_level && d <= 0.5) {
       gradiant = smoothstep(u_range_level, 0.5, d);
-      color = mix(u_weak_color, vec3(1.0, 1.0, 1.0), gradiant);
-      float alpha = mix(opacity, 0.0, gradiant);
-      gl_FragColor = vec4(color, alpha);
+      vec4 colorWithAlpha = vec4(u_weak_color, opacity);
+      vec4 transparent = vec4(vec3(1.0), 0.0);
+      gl_FragColor = mix(colorWithAlpha, transparent, gradiant);
     } else {
       discard;
     }
@@ -74,13 +74,11 @@ export function GroundVisualization() {
                 uniforms={{
                   u_strong_color: { value: new THREE.Color(0x6199DB) },
                   u_weak_color: { value: new THREE.Color(0xDCF8CD) },
-                  u_range_level: { value: 0.4 },
+                  u_range_level: { value: 0.45 },
                   u_resolution: { value: new THREE.Vector2(1, 1) },
                 }}
                 transparent
-                alphaTest={0.5}
-                blending={THREE.NormalBlending}
-                side={THREE.DoubleSide}
+                alphaTest={0.0}
               />
             </mesh>
           );

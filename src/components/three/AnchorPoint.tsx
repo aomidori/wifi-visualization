@@ -30,7 +30,7 @@ const fragmentShader = `
     float d = distance(vUv, vec2(u_resolution.x * 0.5, u_resolution.y * 0.5));
     if (d <= u_radius) {
       gl_FragColor = vec4(u_inner_color, 1.0);
-    } else if (d > u_radius && d < 0.5) {
+    } else if (d > u_radius && d <= 0.5) {
       gl_FragColor = vec4(u_stroke_color, 1.0);
     } else {
       discard;
@@ -58,10 +58,17 @@ export function AnchorPoint({
   }, []);
 
   return (
-    <mesh position={position} onPointerDown={onPointerDown}>
+    <mesh
+      position={position}
+      onPointerDown={onPointerDown}
+      castShadow={false}
+      receiveShadow={false}
+    >
       <shaderMaterial
         attach="material"
         ref={matRef}
+        depthTest={false}
+        depthWrite={false}
         args={[{
           uniforms: {
             u_inner_color: { value: new THREE.Color(color || accent) },
