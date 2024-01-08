@@ -3,13 +3,26 @@ module.exports = {
   env: { browser: true, es2020: true },
   extends: [
     'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
+    'plugin:@typescript-eslint/recommended',
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs'],
   parser: '@typescript-eslint/parser',
-  plugins: ['react-refresh', 'react'],
+  plugins: [
+    'react-refresh',
+    'react',
+    '@typescript-eslint',
+    'import',
+  ],
+  settings: {
+    react: {
+      version: 'detect',
+    },
+    'import/resolver': {
+      typescript: true
+    },
+  },
   rules: {
     'no-unused-vars': 'off',
     'quotes': [2, 'single'],
@@ -23,7 +36,12 @@ module.exports = {
     'react-hooks/exhaustive-deps': 'off',
     'sort-imports': ['error', {
       ignoreDeclarationSort: true,
-      memberSyntaxSortOrder: ['none', 'all', 'single', 'multiple'],
+      ignoreMemberSort: false,
+      allowSeparatedGroups: true,
+      memberSyntaxSortOrder: ['none', 'all', 'multiple', 'single'],
+    }],
+    'import/order': ['error', {
+      'groups': ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
     }],
     'react/jsx-indent': [2, 2],
     'react/jsx-indent-props': [2, 2],

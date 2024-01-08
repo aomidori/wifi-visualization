@@ -4,11 +4,10 @@ import { css } from '@emotion/css';
 import { useEffect } from 'react';
 
 import { Lightings } from '#/components/three/Lightings';
+import { Camera } from '#/components/three/Camera';
 import { FloorPlane, FloorPlaneBaseGrid } from '#/components/three/FloorPlane';
-import { Camera } from './Camera';
+import { GroundVisualization } from '#/components/three/GroundVisualization';
 import { useViewStore } from '#/store/view';
-
-import { GroundVisualization } from './groundVisualization';
 
 const styles = {
   canvasContainer: css`
