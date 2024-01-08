@@ -188,6 +188,9 @@ export function Camera() {
 
   useEffect(() => {
     if (activeProduct) {
+      if (activeView !== 'idle') {
+        setActiveView('idle');
+      }
       // top front view
       new TWEEN.Tween(camera.position)
         .to(cameraPositions.topFrontView, 1200)
@@ -196,9 +199,6 @@ export function Camera() {
         .onUpdate(() => camera.lookAt(0, 0, 0))
         .onComplete(() => {
           setDisableOrbitControls(false);
-          if (activeView !== 'idle') {
-            setActiveView('idle');
-          }
           setRotationNeedsReset(true);
         })
         .start();
