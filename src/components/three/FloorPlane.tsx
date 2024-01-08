@@ -161,7 +161,7 @@ export function FloorPlane() {
         scale={[1, 1, 1]}
         onPointerMove={pointerMoveHandler}
         onPointerOut={pointerOutHandler}
-        onPointerDown={isMobileView ? mobileTapHandler : null}
+        onPointerDown={isMobileView ? mobileTapHandler : () => {}}
       />
       {  // hovering active product
         !!activeProductData && (
@@ -181,7 +181,7 @@ export function FloorPlane() {
         !!anchorPoint && !editingProduct && (
           <AnchorPoint
             position={[anchorPoint.x, anchorPoint.y, anchorPoint.z]}
-            onPointerDown={isMobileView ? null : onAnchorPointerDown}
+            onPointerDown={isMobileView ? () => {} : onAnchorPointerDown}
           />
         )
       }

@@ -99,7 +99,7 @@ export function ProductMesh({
     }
     const meshGroup = groupRef.current;
     meshGroup?.children.forEach((child: THREE.Mesh) => {
-      child.material['color']?.set(color);
+      child?.material['color']?.set(color);
     });
   };
 
