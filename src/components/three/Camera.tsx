@@ -92,8 +92,6 @@ export function Camera() {
 
   useEffect(() => {
     if (!camera) return;
-
-    // keyboard event listeners;
     let keydownStart = 0;
     let keydownSinceStart = 0;
     let recordingKeydownSinceStart = false;
@@ -118,7 +116,7 @@ export function Camera() {
           if (activeView !== 'navigationView') {
             setActiveView('navigationView');
           }
-          if (rotationNeedsReset || camera.position.y !== eyeLevelHeight) {
+          if (rotationNeedsReset) {
             goToEyeLevelView();
             resetCameraRotationOnAxisX();
             setRotationNeedsReset(false);
@@ -147,7 +145,15 @@ export function Camera() {
     window.addEventListener('keyup', keyupHandler);
     window.addEventListener('click', clickHandler);
 
-    // camera state handler
+    return () => {
+      window.removeEventListener('keydown', keydownHandler);
+      window.removeEventListener('keyup', keyupHandler);
+      window.removeEventListener('click', clickHandler);
+    };
+  }, [activeView, rotationNeedsReset]);
+
+  useEffect(() => {
+    if (!camera) return;
     if (activeView === 'topView') {
       // top view
       saveCameraLastState(); // save camera state on ground
@@ -177,18 +183,11 @@ export function Camera() {
         camera.quaternion.copy(cameraLastState.quaternion);
         camera.setRotationFromQuaternion(cameraLastState.worldQuaternion);
       }
-    }
-
-    return () => {
-      window.removeEventListener('keydown', keydownHandler);
-      window.removeEventListener('keyup', keyupHandler);
-      window.removeEventListener('click', clickHandler);
-    };
-  }, [activeView, rotationNeedsReset]);
+    }    
+  }, [activeView]);
 
   useEffect(() => {
     if (activeProduct) {
-      setRotationNeedsReset(true);
       // top front view
       new TWEEN.Tween(camera.position)
         .to(cameraPositions.topFrontView, 1200)
@@ -197,7 +196,10 @@ export function Camera() {
         .onUpdate(() => camera.lookAt(0, 0, 0))
         .onComplete(() => {
           setDisableOrbitControls(false);
-          setActiveView('idle');
+          if (activeView !== 'idle') {
+            setActiveView('idle');
+          }
+          setRotationNeedsReset(true);
         })
         .start();
     }
