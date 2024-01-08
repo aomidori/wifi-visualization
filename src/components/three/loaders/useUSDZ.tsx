@@ -29,7 +29,7 @@ export const useUSDZ = (url: string, name: string): [boolean, THREE.Group] => {
   const [loaded, setLoaded] = useState(false);
 
   const assignUniqueMeshId = (group: THREE.Group) => {
-    group.userData.meshId = group.uuid + new Date().getUTCMilliseconds();
+    group.userData.meshId = `${group.uuid}_${String(new Date().getTime())}`;
   };
 
   useEffect(() => {
