@@ -42,11 +42,12 @@ const fragmentShader = `
 
 export function GroundVisualization() {
   const showVisualization = useViewStore(state => state.showVisualization);
+  const disableVisualization = useViewStore(state => state.disableVisualization);
   const anchoredProducts = useProductsStore(state => state.anchoredProducts);
   const products = useProductsStore(state => state.products);
 
   return (
-    <group name="ground" visible={anchoredProducts.length && showVisualization}>
+    <group name="ground" visible={anchoredProducts.length && showVisualization && !disableVisualization}>
       {
         anchoredProducts?.map((product, index) => {
           if (product.removed) {

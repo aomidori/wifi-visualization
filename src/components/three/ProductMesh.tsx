@@ -49,7 +49,7 @@ export function ProductMesh({
   const setHoveringProduct = useProductsStore(state => state.setHoveringProduct);
   const updateAnchoredProduct = useProductsStore(state => state.updateAnchoredProduct);
   const setDisableOrbitControls = useViewStore(state => state.setDisableOrbitControls);
-  const setShowVisualization = useViewStore(state => state.setShowVisualization);
+  const setDisableVisualization = useViewStore(state => state.setDisableVisualization);
 
   useFrame(() => {
     if (autoRotate && groupRef.current) {
@@ -134,7 +134,7 @@ export function ProductMesh({
     if (editingProduct?.id !== productId && editingProduct?.meshId !== groupRef.current.userData.meshId) {
       setEditingProduct({ id: productId, meshId: groupRef.current.userData.meshId });
       setDisableOrbitControls(true);
-      setShowVisualization(false);
+      setDisableVisualization(true);
     }
   };
 
@@ -144,7 +144,7 @@ export function ProductMesh({
     }
     setEditingProduct(null);
     setDisableOrbitControls(false);
-    setShowVisualization(true);
+    setDisableVisualization(false);
     updateAnchoredProduct(index, { position: groupRef.current.position });
   };
 

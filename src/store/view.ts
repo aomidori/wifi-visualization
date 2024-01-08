@@ -16,6 +16,7 @@ interface ViewState {
   cameraLastState?: CameraState
   // product effect visualization
   showVisualization?: boolean;
+  disableVisualization?: boolean;
   isOrbitControlsDisabled?: boolean;
   isMobileView?: boolean;
   setActiveView: (activeView: SceneActiveView) => void;
@@ -25,6 +26,7 @@ interface ViewState {
   setShowNavigationInstruction: (value: boolean) => void;
   setIsMobileView: (value: boolean) => void;
   setShowVisualization: (value: boolean) => void;
+  setDisableVisualization: (value: boolean) => void;
 }
 
 export const useViewStore = create<ViewState>()(set => ({
@@ -39,4 +41,5 @@ export const useViewStore = create<ViewState>()(set => ({
   setShowNavigationInstruction: (value) => set({ showNavigationInstruction: value }),
   setIsMobileView: (value) => set({ isMobileView: value }),
   setShowVisualization: (value) => set({ showVisualization: value }),
+  setDisableVisualization: (value) => set({ disableVisualization: value }),
 }));
