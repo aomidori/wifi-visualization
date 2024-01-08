@@ -65,7 +65,7 @@ const InstructionText = ({
 export function FloorPlane() {
   const groupRef = useRef<THREE.Group>();
   const gltf = useGLTF('/assets/models/floor_plan/scan.gltf');
-  const [ materials, setMaterialColor, resetMaterials ]= useMaterials();
+  const [materials, setMaterialColor, resetMaterials] = useMaterials();
 
   const accent = useSettingsStore(state => state.accent);
   const activeView = useViewStore(state => state.activeView);
