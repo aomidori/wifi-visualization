@@ -8,6 +8,7 @@ interface ProductData {
   imageUrl: string;
   modelUrl: string;
   markerColor: string;
+  wifiRangeRadius: number;
 }
 
 type InstructionName = 'productPlaceholder' | 'editingProduct';

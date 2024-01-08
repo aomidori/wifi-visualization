@@ -37,7 +37,7 @@ export function ProductMesh({
   onBlur,
 }: Props) {
   const groupRef = useRef<THREE.Group>();
-  const matRef = useRef<THREE.MeshBasicMaterial>(new THREE.MeshBasicMaterial());
+  const matRef = useRef<THREE.MeshPhysicalMaterial>(new THREE.MeshPhysicalMaterial());
   const [loaded, usdz] = useUSDZ(productModelUrl, productId);
 
   const editingColor = useSettingsStore(state => state.editing);
@@ -72,6 +72,7 @@ export function ProductMesh({
     }
     groupRef.current?.children.forEach((child: THREE.Mesh) => {
       if (child.isMesh) {
+        (child.material as THREE.Material).dispose();
         child.material = matRef.current;
       }
     });
@@ -84,7 +85,9 @@ export function ProductMesh({
     if (editingProduct?.id === productId && editingProduct?.meshId === groupRef.current?.userData.meshId) {
       setMeshColor(editingColor);
     } else {
-      setMeshColor(color);
+      if (color) {
+        setMeshColor(color);
+      }
     }
   }, [loaded, color, editingProduct]);
 

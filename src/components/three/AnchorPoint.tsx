@@ -65,7 +65,7 @@ export function AnchorPoint({
           uniforms: {
             u_inner_color: { value: new THREE.Color(color || accent) },
             u_stroke_color: { value: new THREE.Color(0xffffff) },
-            u_radius: { value: (size / 2.0) * 0.8 },
+            u_radius: { value: 0.37 },
             u_resolution: { value: new THREE.Vector2(1, 1) },
           },
           vertexShader,

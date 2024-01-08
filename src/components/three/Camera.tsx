@@ -118,10 +118,10 @@ export function Camera() {
           if (activeView !== 'navigationView') {
             setActiveView('navigationView');
           }
-          if (rotationNeedsReset) {
+          if (rotationNeedsReset || camera.position.y !== eyeLevelHeight) {
+            goToEyeLevelView();
             resetCameraRotationOnAxisX();
             setRotationNeedsReset(false);
-            return;
           }
           setDirection(key);
           setDisableOrbitControls(true);

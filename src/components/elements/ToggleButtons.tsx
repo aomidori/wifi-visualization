@@ -2,11 +2,6 @@ import { css, cx } from '@emotion/css';
 
 const styles = {
   container: css`
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 80px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -48,6 +43,7 @@ interface Props {
   selected: string;
   onChange: (value: string) => void;
   buttonSize?: 'small' | 'medium' | 'large';
+  className?: string;
 }
 
 export function ToggleButtons({
@@ -55,15 +51,16 @@ export function ToggleButtons({
   selected,
   onChange,
   buttonSize = 'medium',
+  className,
 }: Props) {
   const activeIndex = Math.max(0, options.findIndex(({ value }) => value === selected));
 
-  const buttonWidth = buttonSize === 'small' ? 60 : buttonSize === 'medium' ? 88 : 120;
+  const buttonWidth = buttonSize === 'small' ? 40 : buttonSize === 'medium' ? 88 : 120;
   const buttonHeight = buttonSize === 'small' ? 30 : buttonSize === 'medium' ? 40 : 50;
   const fontSize = buttonSize === 'small' ? 12 : 14;
 
   return (
-    <div className={styles.container}>
+    <div className={cx(styles.container, className)}>
       <div className={styles.toggle} style={{ height: buttonHeight }}>
         <span className={css`
           left: ${buttonWidth * activeIndex}px;

@@ -14,6 +14,8 @@ interface ViewState {
   activeInstructionName: InstructionName;
   // save camera position when switching between ground/top views
   cameraLastState?: CameraState
+  // product effect visualization
+  showVisualization?: boolean;
   isOrbitControlsDisabled?: boolean;
   isMobileView?: boolean;
   setActiveView: (activeView: SceneActiveView) => void;
@@ -22,11 +24,13 @@ interface ViewState {
   setCameraLastState: (data: CameraState) => void;
   setShowNavigationInstruction: (value: boolean) => void;
   setIsMobileView: (value: boolean) => void;
+  setShowVisualization: (value: boolean) => void;
 }
 
 export const useViewStore = create<ViewState>()(set => ({
   activeView: 'idle',
   showNavigationInstruction: true,
+  showVisualization: true,
   activeInstructionName: 'productPlaceholder',
   setActiveView: (activeView: SceneActiveView) => set({ activeView }),
   setActiveInstructionName: (activeInstructionName: InstructionName) => set({ activeInstructionName }),
@@ -34,4 +38,5 @@ export const useViewStore = create<ViewState>()(set => ({
   setCameraLastState: (data) => set({ cameraLastState: data }),
   setShowNavigationInstruction: (value) => set({ showNavigationInstruction: value }),
   setIsMobileView: (value) => set({ isMobileView: value }),
+  setShowVisualization: (value) => set({ showVisualization: value }),
 }));

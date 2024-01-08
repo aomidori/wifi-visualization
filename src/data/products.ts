@@ -6,6 +6,7 @@ export const products: ProductData[] = [{
   imageUrl: '/assets/images/unifi_ap_ac.jpg',
   modelUrl: '/assets/models/UniFi_AP_AC_3D_model.usdz',
   markerColor: '#568FE4',
+  wifiRangeRadius: 11,
 }, {
   id: 'unifi_ac_pro',
   name: 'UniFi AP U6',
@@ -14,4 +15,5 @@ export const products: ProductData[] = [{
   imageUrl: '/assets/images/unifi_ap_ac.jpg',
   modelUrl: '/assets/models/UniFi_AP_AC_3D_model.usdz',
   markerColor: '#61DB66',
+  wifiRangeRadius: 9,
 }];

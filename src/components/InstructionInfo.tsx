@@ -1,6 +1,5 @@
 import { useViewStore } from '#/store/view';
 import { css, keyframes } from '@emotion/css';
-import { useEffect } from 'react';
 
 const animations = {
   fadeOut: keyframes`

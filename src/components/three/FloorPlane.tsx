@@ -7,7 +7,7 @@ import * as THREE from 'three';
 import { ProductMesh } from './ProductMesh';
 import { AnchorPoint } from './AnchorPoint';
 import { useViewStore } from '#/store/view';
-import { dispose } from '#/utils/helpers';
+import { dispose, lightenHexColor } from '#/utils/helpers';
 import { useMaterials } from './materials/useMaterials';
 import { debounce } from 'lodash';
 
@@ -205,7 +205,7 @@ export function FloorPlane() {
               productModelUrl={product.modelUrl}
               productId={productId}
               anchored
-              color={product.markerColor}
+              color={lightenHexColor(product.markerColor, 0.5)}
               scale={[0.03, 0.03, 0.03]}
               rotation={[Math.PI / 2, 0, 0]}
               position={position.toArray()}

@@ -7,7 +7,8 @@ import { Lightings } from '#/components/three/Lightings';
 import { FloorPlane, FloorPlaneBaseGrid } from '#/components/three/FloorPlane';
 import { Camera } from './Camera';
 import { useViewStore } from '#/store/view';
-import { useSettingsStore } from '#/store/settings';
+
+import { GroundVisualization } from './groundVisualization';
 
 const styles = {
   canvasContainer: css`
@@ -37,6 +38,7 @@ function Scene() {
       <Lightings />
       <FloorPlane />
       <FloorPlaneBaseGrid />
+      <GroundVisualization />
       <OrbitControls
         enabled={!isOrbitControlsDisabled}
         maxPolarAngle={Math.PI / 2}

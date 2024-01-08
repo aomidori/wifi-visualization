@@ -5,6 +5,7 @@ import { CanvasView } from '#/components/three/CanvasView';
 import { Products } from '#/components/Products';
 import { useViewStore } from './store/view';
 import { useEffect } from 'react';
+import { VisualizeToggle } from './components/VisualizeToggle';
 
 function App() {
   const setIsMobileView = useViewStore(state => state.setIsMobileView);
@@ -27,6 +28,7 @@ function App() {
     <>
       <CanvasView />
       <TopViewToggle />
+      <VisualizeToggle />
       <InstructionInfo />
       <Products />
       <TweakPane />
