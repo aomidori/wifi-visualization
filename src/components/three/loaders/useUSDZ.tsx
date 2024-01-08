@@ -6,19 +6,33 @@ import { USDZInstance } from 'three-usdz-loader/lib/USDZInstance';
 
 import { checkStatus } from '#/utils/checkStatus';
 import { useViewStore } from '#/store/view';
+import { dispose } from '#/utils/helpers';
 
 // cached models
 const cached = {};
+window.addEventListener('unload', () => {
+  if (!cached) return;
+  Object.values(cached).forEach((model: THREE.Group) => {
+    dispose(model);
+  });
+});
 
-const loadUSDZ = async (url: string, name: string, group): Promise<USDZInstance> => {
+export const loadUSDZ = async (url: string, name: string, group: THREE.Group): Promise<USDZInstance> => {
   try {
     const response = await fetch(url).then(checkStatus);
     const blob = await response.blob();
     const loader = new USDZLoader();
-    return loader.loadFile(new File([blob], `${name}.usdz`), group);
+    const usdzInstance = await loader.loadFile(new File([blob], `${name}.usdz`), group);
+    group.name = name;
+    cached[name] = group.clone();
+    return usdzInstance;
   } catch (error) {
     console.error('Failed to load USDZ', error);
   }
+};
+
+const assignUniqueMeshId = (group: THREE.Group) => {
+  group.userData.meshId = `${group.uuid}_${String(new Date().getTime())}`;
 };
 
 export const useUSDZ = (url: string, name: string): [boolean, THREE.Group] => {
@@ -28,14 +42,9 @@ export const useUSDZ = (url: string, name: string): [boolean, THREE.Group] => {
   const parentRef = useRef<THREE.Group>(new THREE.Group());
   const [loaded, setLoaded] = useState(false);
 
-  const assignUniqueMeshId = (group: THREE.Group) => {
-    group.userData.meshId = `${group.uuid}_${String(new Date().getTime())}`;
-  };
-
   useEffect(() => {
     if (cached[name]) {
       parentRef.current.copy(cached[name]);
-      parentRef.current.name = name;
       assignUniqueMeshId(parentRef.current);
       setLoaded(true);
       return;
@@ -52,8 +61,6 @@ export const useUSDZ = (url: string, name: string): [boolean, THREE.Group] => {
       return;  
     }
     loadUSDZ(url, name, parentRef.current).then(() => {
-      cached[name] = parentRef.current.clone();
-      parentRef.current.name = name;
       assignUniqueMeshId(parentRef.current);
       setLoaded(true);
     });

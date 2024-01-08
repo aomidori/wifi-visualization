@@ -79,12 +79,14 @@ export function FloorPlane() {
   const getActiveProductData = useProductsStore(state => state.getActiveProductData);
   const anchoredProducts = useProductsStore(state => state.anchoredProducts);
   const addAnchoredProduct = useProductsStore(state => state.addAnchoredProduct);
+  const preloadProductModels = useProductsStore(state => state.preloadProductModels);
 
   const [anchorPoint, setAnchorPoint] = useState<THREE.Vector3>();
   const [productFloatHeight, setProductFloatHeight] = useState<number>(4);
 
   useEffect(() => {
-    gltf.scene?.traverse((child) => {
+    if (!gltf.scene) return;
+    gltf.scene.traverse((child) => {
       // hide ceiling by default
       if (child.name === 'CeilingNode') {
         child.visible = false;
@@ -97,6 +99,12 @@ export function FloorPlane() {
         child.material = materials.floorMat;
       }
     });
+
+    if (!isMobileView) {
+      setTimeout(() => {
+        preloadProductModels();
+      },1500);
+    }
   }, [gltf]);
 
   useEffect(() => {

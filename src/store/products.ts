@@ -1,6 +1,8 @@
 import { create } from 'zustand';
+import * as THREE from 'three';
 
 import { products } from '#/data/products';
+import { loadUSDZ } from '#/components/three/loaders/useUSDZ';
 
 type AnchoredProduct = {
   productId: string;
@@ -25,6 +27,7 @@ interface ProductsStoreState {
   updateAnchoredProduct: (index: number, data: Partial<AnchoredProduct>) => void;
   setEditingProduct: (data: {id: string, meshId}) => void;
   setHoveringProduct: (data: {id: string, meshId}) => void;
+  preloadProductModels: () => void;
 }
 
 export const useProductsStore = create<ProductsStoreState>()((set, get) => ({
@@ -43,4 +46,15 @@ export const useProductsStore = create<ProductsStoreState>()((set, get) => ({
     anchoredProducts[index] = { ...anchoredProducts[index], ...data };
     return { anchoredProducts };
   }),
+  preloadProductModels: () => {
+    const { products } = get();
+    try {
+      for (const product of products) {
+        const ref = new THREE.Group();
+        loadUSDZ(product.modelUrl, product.id, ref);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  },
 }));
