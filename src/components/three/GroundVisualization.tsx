@@ -74,7 +74,7 @@ export function GroundVisualization() {
                 uniforms={{
                   u_strong_color: { value: new THREE.Color(0x6199DB) },
                   u_weak_color: { value: new THREE.Color(0xDCF8CD) },
-                  u_range_level: { value: 0.45 },
+                  u_range_level: { value: 0.37 },
                   u_resolution: { value: new THREE.Vector2(1, 1) },
                 }}
                 transparent
