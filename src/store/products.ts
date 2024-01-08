@@ -2,7 +2,7 @@ import { create } from 'zustand';
 
 import { products } from '#/data/products';
 
-type AnchordProduct = {
+type AnchoredProduct = {
   productId: string;
   position: THREE.Vector3;
   meshId?: string;
@@ -13,7 +13,7 @@ interface ProductsStoreState {
   // product to be installed on the ceiling
   activeProduct?: string;
   // products that are already installed on the ceiling
-  anchoredProducts?: AnchordProduct[];
+  anchoredProducts?: AnchoredProduct[];
   // hovered product on the ceiling
   hoveringProduct?: { id: string; meshId: string };
   // selected product that's already installed on the ceiling
@@ -22,7 +22,7 @@ interface ProductsStoreState {
   setActiveProduct: (id: string) => void;
   addAnchoredProduct: (productId: string, position: THREE.Vector3) => void;
   removeAnchoredProduct: (index: number) => void;
-  updateAnchoredProducts: (products: AnchordProduct[]) => void;
+  updateAnchoredProduct: (index: number, data: Partial<AnchoredProduct>) => void;
   setEditingProduct: (data: {id: string, meshId}) => void;
   setHoveringProduct: (data: {id: string, meshId}) => void;
 }
@@ -36,7 +36,11 @@ export const useProductsStore = create<ProductsStoreState>()((set, get) => ({
   addAnchoredProduct: (productId, position) => set({ anchoredProducts: [...get().anchoredProducts, {productId, position}] }),
   removeAnchoredProduct: (index) => set(
     { anchoredProducts: get().anchoredProducts.filter((_, i) => i !== index) }),
-  updateAnchoredProducts: (products) => set({ anchoredProducts: products }),
   setEditingProduct: (data) => set({ editingProduct: data }),
   setHoveringProduct: (data) => set({ hoveringProduct: data }),
+  updateAnchoredProduct: (index, data) => set(state => {
+    const anchoredProducts = [...state.anchoredProducts];
+    anchoredProducts[index] = { ...anchoredProducts[index], ...data };
+    return { anchoredProducts };
+  }),
 }));

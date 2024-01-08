@@ -47,7 +47,9 @@ export function ProductMesh({
   const setEditingProduct = useProductsStore(state => state.setEditingProduct);
   const setHoveringProduct = useProductsStore(state => state.setHoveringProduct);
   const removeAnchoredProduct = useProductsStore(state => state.removeAnchoredProduct);
+  const updateAnchoredProduct = useProductsStore(state => state.updateAnchoredProduct);
   const setDisableOrbitControls = useViewStore(state => state.setDisableOrbitControls);
+  const setShowVisualization = useViewStore(state => state.setShowVisualization);
 
   const hovering = hoveringProduct?.meshId === groupRef.current?.userData.meshId;
 
@@ -83,6 +85,7 @@ export function ProductMesh({
     if (!loaded) {
       return;
     }
+    updateAnchoredProduct(index, { meshId: groupRef.current.userData.meshId });
     if (editingProduct?.id === productId && editingProduct?.meshId === groupRef.current?.userData.meshId) {
       setMeshColor(editingColor);
     } else {
@@ -129,6 +132,7 @@ export function ProductMesh({
     if (editingProduct?.id !== productId && editingProduct?.meshId !== groupRef.current.userData.meshId) {
       setEditingProduct({ id: productId, meshId: groupRef.current.userData.meshId });
       setDisableOrbitControls(true);
+      setShowVisualization(false);
     }
   };
 
@@ -138,6 +142,8 @@ export function ProductMesh({
     }
     setEditingProduct(null);
     setDisableOrbitControls(false);
+    setShowVisualization(true);
+    updateAnchoredProduct(index, { position: groupRef.current.position });
   };
 
   const pointerEnterHandler = (e) => {
