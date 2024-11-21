@@ -1,8 +1,11 @@
-# Ubiquiti Homework
+# "UI" visualization demo
 
-The project for "Ubiquiti 3D Fullstack Web Developer Test Assignment".
+<img src="https://github.com/user-attachments/assets/c926bf7b-cf77-4088-b6dd-c91a67142425" width="640">
+<img src="https://github.com/user-attachments/assets/4f496b82-1169-401e-91c0-58e30650d5ff" width="640">
 
-Key features are:
+
+
+### Key features:
 
 - interactive floorplane
 - select and install products on the ceiling
